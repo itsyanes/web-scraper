@@ -5,19 +5,24 @@
 #include "shared.h"
 #include "utils.h"
 
-typedef struct StringWrapper StringWrapper;
-struct StringWrapper
+typedef struct StringPrototype StringPrototype;
+struct StringPrototype
 {
-    string string;
-    void (*fromString)(StringWrapper *, string);
     int (*length)(StringWrapper *);
     int (*print)(StringWrapper *, FILE *);
     void (*destroy)(StringWrapper *);
     int (*reduce)(StringWrapper *, int (*)(int, char), int);
 };
 
-StringWrapper *newStringWrapper();
-static void StringWrapperFromString(StringWrapper *wrapper, string str);
+typedef struct StringWrapper StringWrapper;
+struct StringWrapper
+{
+    string string;
+    StringPrototype *__proto__;
+};
+
+StringWrapper *wrapString(string str);
+static StringPrototype *getStringProto();
 static int StringWrapperLength(StringWrapper *wrapper);
 static int StringWrapperPrint(StringWrapper *wrapper, FILE *output);
 static void StringWrapperDestroy(StringWrapper *wrapper);

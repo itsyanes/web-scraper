@@ -1,21 +1,27 @@
 #include "string-wrapper.h"
 
-StringWrapper *newStringWrapper()
+StringWrapper *wrapString(string str)
 {
     StringWrapper *wrapper = xmalloc(1, sizeof(StringWrapper));
-    wrapper->fromString = &StringWrapperFromString;
-    wrapper->length = &StringWrapperLength;
-    wrapper->print = &StringWrapperPrint;
-    wrapper->destroy = &StringWrapperDestroy;
-    wrapper->reduce = &StringWrapperReduce;
-    return wrapper;
-}
-
-void StringWrapperFromString(StringWrapper *wrapper, string str)
-{
     string new = xmalloc(strlen(str) + 1, sizeof(string));
     strcpy(new, str);
     wrapper->string = new;
+    wrapper->__proto__ = getStringProto();
+    return wrapper;
+}
+
+StringPrototype *getStringProto()
+{
+    static StringPrototype *proto = NULL;
+    if (!proto)
+    {
+        proto = xmalloc(1, sizeof(StringPrototype));
+        proto->length = &StringWrapperLength;
+        proto->print = &StringWrapperPrint;
+        proto->destroy = &StringWrapperDestroy;
+        proto->reduce = &StringWrapperReduce;
+    }
+    return proto;
 }
 
 int StringWrapperLength(StringWrapper *wrapper)
@@ -25,7 +31,7 @@ int StringWrapperLength(StringWrapper *wrapper)
 
 int StringWrapperReduce(StringWrapper *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue)
 {
-    for (int i = 0; i < wrapper->length(wrapper); i++)
+    for (int i = 0; i < strlen(wrapper->string); i++)
     {
         initialValue = reducer(initialValue, wrapper->string[i]);
     }
