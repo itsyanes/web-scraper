@@ -16,7 +16,7 @@ This is a Command Line application used to extract data from any given website.
 
 ```bash
 docker pull gcc:9.2
-docker run --rm -v ${PWD}:/dev/test -w  /dev/test gcc:9.2 gcc make all
+docker run --rm -v ${PWD}:/dev/test -w  /dev/test gcc:9.2 make all
 ```
 
 - Run the output binary in a Debian container.

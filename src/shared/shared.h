@@ -8,5 +8,6 @@
 #include <string.h>
 
 typedef char *string;
+typedef unsigned long size_t;
 
 #endif

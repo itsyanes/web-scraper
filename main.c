@@ -1,6 +1,4 @@
-#include "string-wrapper.c"
-#include "map.c"
-#include "utils.c"
+#include "index.c"
 
 int reducer(int accumulator, char currentValue)
 {
