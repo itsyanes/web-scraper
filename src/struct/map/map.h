@@ -2,8 +2,8 @@
 
 #define MAP_H
 
-#include "utils.h"
-#include "shared.h"
+#include "utils/utils.h"
+#include "shared/shared.h"
 
 typedef struct Map Map;
 struct Map

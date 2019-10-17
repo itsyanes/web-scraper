@@ -2,7 +2,7 @@
 
 #define UTILS_H
 
-#include "shared.h"
+#include "shared/shared.h"
 
 void *xmalloc(size_t nbBlocks, size_t blockSize);
 

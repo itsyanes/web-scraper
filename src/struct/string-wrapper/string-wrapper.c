@@ -6,7 +6,7 @@ StringWrapper *wrapString(string str)
     string new = xmalloc(strlen(str) + 1, sizeof(string));
     strcpy(new, str);
     wrapper->string = new;
-    wrapper->__proto__ = getStringProto();
+    wrapper->proto = getStringProto();
     return wrapper;
 }
 

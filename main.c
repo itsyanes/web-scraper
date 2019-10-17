@@ -9,9 +9,8 @@ int reducer(int accumulator, char currentValue)
 
 int main(int argc, char **argv)
 {
-    StringWrapper *wrapper = newStringWrapper();
-    wrapper->fromString(wrapper, "tototiti");
-    wrapper->print(wrapper, stdout);
-    printf("%d", wrapper->reduce(wrapper, &reducer, 0));
-    wrapper->destroy(wrapper);
+    StringWrapper *wrapper = wrapString("tototiti");
+    wrapper->proto->print(wrapper, stdout);
+    printf("%d", wrapper->proto->reduce(wrapper, &reducer, 0));
+    wrapper->proto->destroy(wrapper);
 }

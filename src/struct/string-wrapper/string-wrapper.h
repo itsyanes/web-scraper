@@ -2,8 +2,8 @@
 
 #define STRING_WRAPPER_H
 
-#include "shared.h"
-#include "utils.h"
+#include "shared/shared.h"
+#include "utils/utils.h"
 
 typedef struct StringPrototype StringPrototype;
 struct StringPrototype
@@ -18,7 +18,7 @@ typedef struct StringWrapper StringWrapper;
 struct StringWrapper
 {
     string string;
-    StringPrototype *__proto__;
+    StringPrototype *proto;
 };
 
 StringWrapper *wrapString(string str);
