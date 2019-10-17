@@ -1,4 +1,4 @@
-# Web Scrapper
+# Web Scraper
 
 ## Description
 
@@ -22,6 +22,6 @@ docker run --rm -v ${PWD}:/dev/test -w  /dev/test gcc:9.2 gcc make all
 - Run the output binary in a Debian container.
 
 ```bash
-docker pull gcc:10.1
+docker pull debian:10.1
 docker run --rm -v ${PWD}/bin:/dev/test -w /dev/test debian:10.1 ./wscrap [OPTIONS]
 ```
