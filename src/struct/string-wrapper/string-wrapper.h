@@ -16,17 +16,16 @@ struct StringWrapper
 
 struct StringPrototype
 {
-    int (*length)(String *wrapper);
+    size_t (*length)(String *wrapper);
     void (*destroy)(String *wrapper);
-    int (*reduce)(String *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue);
     String *(*build)(String *wrapper, string format, ...);
-    char (*charAt)();
-    void (*concat)(String *wrapper, ...);
-    void (*endsWith)();
-    void (*startsWith)();
-    void (*includes)();
-    void (*indexOf)();
-    void (*lastIndexOf)();
+    char (*charAt)(String *wrapper, size_t index);
+    int (*indexOf)(String *wrapper, char element);
+    int (*lastIndexOf)(String *wrapper, char element);
+    String *(*concat)(String *wrapper, string source);
+    bool (*startsWith)();
+    bool (*endsWith)();
+    bool (*includes)();
     void (*replace)();
     void (*slice)();
     void (*split)();
@@ -38,9 +37,12 @@ String *newString();
 String *wrapString(string str);
 static StringPrototype *getStringProto();
 static bool StringIsAllocated(String *wrapper);
-static int StringLength(String *wrapper);
-static int StringReduce(String *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue);
+static size_t StringLength(String *wrapper);
 static String *StringBuild(String *wrapper, string format, ...);
+static char StringCharAt(String *wrapper, size_t index);
+static int StringIndexOf(String *wrapper, char element);
+static int StringLastIndexOf(String *wrapper, char element);
+static String *StringConcat(String *wrapper, string source);
 static void StringDestroy(String *wrapper);
 
 #endif
