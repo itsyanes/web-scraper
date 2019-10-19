@@ -1,3 +1,3 @@
-#include "utils/alloc.c"
+#include "utils/alloc/alloc.c"
 #include "struct/map/map.c"
 #include "struct/string-wrapper/string-wrapper.c"
