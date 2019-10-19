@@ -1,8 +1,16 @@
 #include "string-wrapper.h"
 
-StringWrapper *wrapString(string str)
+String *newString()
 {
-    StringWrapper *wrapper = xmalloc(1, sizeof(StringWrapper));
+    String *wrapper = xmalloc(1, sizeof(String));
+    wrapper->string = "";
+    wrapper->proto = getStringProto();
+    return wrapper;
+}
+
+String *wrapString(string str)
+{
+    String *wrapper = xmalloc(1, sizeof(String));
     string new = xmalloc(strlen(str) + 1, sizeof(string));
     strcpy(new, str);
     wrapper->string = new;
@@ -16,35 +24,59 @@ StringPrototype *getStringProto()
     if (!proto)
     {
         proto = xmalloc(1, sizeof(StringPrototype));
-        proto->length = &StringWrapperLength;
-        proto->print = &StringWrapperPrint;
-        proto->destroy = &StringWrapperDestroy;
-        proto->reduce = &StringWrapperReduce;
+        proto->length = &StringLength;
+        proto->destroy = &StringDestroy;
+        proto->reduce = &StringReduce;
+        proto->build = &StringBuild;
     }
     return proto;
 }
 
-int StringWrapperLength(StringWrapper *wrapper)
+bool StringIsAllocated(String *wrapper)
 {
-    return strlen(wrapper->string);
+    return wrapper->string && strlen(wrapper->string) > 0;
 }
 
-int StringWrapperReduce(StringWrapper *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue)
+int StringLength(String *wrapper)
 {
-    for (int i = 0; i < strlen(wrapper->string); i++)
+    return StringIsAllocated(wrapper) ? strlen(wrapper->string) : 0;
+}
+
+int StringReduce(String *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue)
+{
+    for (int i = 0; i < wrapper->proto->length(wrapper); i++)
     {
         initialValue = reducer(initialValue, wrapper->string[i]);
     }
     return initialValue;
 }
 
-int StringWrapperPrint(StringWrapper *wrapper, FILE *output)
+String *StringBuild(String *wrapper, string format, ...)
 {
-    return fprintf(output, "%s\n", wrapper->string);
+    va_list args, copy;
+    va_start(args, format);
+    va_copy(copy, args);
+    size_t size = vsnprintf(NULL, 0, format, args);
+    string buffer = xmalloc(size + 1, sizeof(char));
+    vsprintf(buffer, format, copy);
+    va_end(copy);
+    va_end(args);
+
+    if (StringIsAllocated(wrapper))
+    {
+        free(wrapper->string);
+    }
+
+    wrapper->string = buffer;
+    return wrapper;
 }
 
-void StringWrapperDestroy(StringWrapper *wrapper)
+void StringDestroy(String *wrapper)
 {
-    free(wrapper->string);
+    if (StringIsAllocated(wrapper))
+    {
+        free(wrapper->string);
+    }
+
     free(wrapper);
 }

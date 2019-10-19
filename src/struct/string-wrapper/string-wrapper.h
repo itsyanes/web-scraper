@@ -6,7 +6,7 @@
 #include "utils/alloc/alloc.h"
 
 typedef struct StringPrototype StringPrototype;
-typedef struct StringWrapper StringWrapper;
+typedef struct StringWrapper String;
 
 struct StringWrapper
 {
@@ -16,13 +16,12 @@ struct StringWrapper
 
 struct StringPrototype
 {
-    int (*length)(StringWrapper *);
-    int (*print)(StringWrapper *, FILE *);
-    void (*destroy)(StringWrapper *);
-    int (*reduce)(StringWrapper *, int (*)(int, char), int);
-    StringWrapper *(*build)(StringWrapper *, string, ...);
+    int (*length)(String *wrapper);
+    void (*destroy)(String *wrapper);
+    int (*reduce)(String *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue);
+    String *(*build)(String *wrapper, string format, ...);
     char (*charAt)();
-    void (*concat)(StringWrapper *, ...);
+    void (*concat)(String *wrapper, ...);
     void (*endsWith)();
     void (*startsWith)();
     void (*includes)();
@@ -35,11 +34,13 @@ struct StringPrototype
     void (*toString)();
 };
 
-StringWrapper *wrapString(string str);
+String *newString();
+String *wrapString(string str);
 static StringPrototype *getStringProto();
-static int StringWrapperLength(StringWrapper *wrapper);
-static int StringWrapperPrint(StringWrapper *wrapper, FILE *output);
-static void StringWrapperDestroy(StringWrapper *wrapper);
-static int StringWrapperReduce(StringWrapper *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue);
+static bool StringIsAllocated(String *wrapper);
+static int StringLength(String *wrapper);
+static int StringReduce(String *wrapper, int (*reducer)(int accumulator, char currentValue), int initialValue);
+static String *StringBuild(String *wrapper, string format, ...);
+static void StringDestroy(String *wrapper);
 
 #endif

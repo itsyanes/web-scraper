@@ -7,8 +7,8 @@ int reducer(int accumulator, char currentValue)
 
 int main(int argc, char **argv)
 {
-    StringWrapper *wrapper = wrapString("tototiti");
-    wrapper->proto->print(wrapper, stdout);
-    printf("%d", wrapper->proto->reduce(wrapper, &reducer, 0));
+    String *wrapper = newString();
+    wrapper->proto->build(wrapper, "%s%s%s%d%s", "toto", " ", "is ", 12, " years old.");
+    puts(wrapper->string);
     wrapper->proto->destroy(wrapper);
 }
