@@ -20,6 +20,19 @@ struct StringPrototype
     int (*print)(StringWrapper *, FILE *);
     void (*destroy)(StringWrapper *);
     int (*reduce)(StringWrapper *, int (*)(int, char), int);
+    StringWrapper *(*build)(StringWrapper *, string, ...);
+    char (*charAt)();
+    void (*concat)(StringWrapper *, ...);
+    void (*endsWith)();
+    void (*startsWith)();
+    void (*includes)();
+    void (*indexOf)();
+    void (*lastIndexOf)();
+    void (*replace)();
+    void (*slice)();
+    void (*split)();
+    void (*subString)();
+    void (*toString)();
 };
 
 StringWrapper *wrapString(string str);
