@@ -1,4 +1,4 @@
-# Web-Scraper Documentation
+## Description
 
 Web-Scraper is a command-line application used to extract data from any website. It respects the KISS approach. It is quite customizable thanks to multiple options from its configuration file.
 
