@@ -18,5 +18,15 @@ int main(int argc, char **argv)
     printf("includes: %d, includes: %d\n", wrapper->proto->includes(wrapper, "toto"), wrapper->proto->includes(wrapper, "titi"));
     printf("startsWith: %d, startsWith: %d\n", wrapper->proto->startsWith(wrapper, "toto"), wrapper->proto->startsWith(wrapper, "years"));
     printf("endsWith: %d, endsWith: %d\n", wrapper->proto->endsWith(wrapper, "old."), wrapper->proto->endsWith(wrapper, "he?"));
+    wrapper->proto->replace(wrapper, "o", "atm");
+    printf("%s\nlength: %lu\n", wrapper->string, wrapper->proto->length(wrapper));
     wrapper->proto->destroy(wrapper);
+    wrapper = wrapString("elancourt");
+    wrapper->proto->reverse(wrapper);
+    wrapper->proto->reverse(wrapper);
+    puts(wrapper->string);
+    String *wrapper2 = wrapper->proto->slice(wrapper, 4, 6);
+    puts(wrapper2->string);
+    wrapper->proto->destroy(wrapper);
+    wrapper2->proto->destroy(wrapper2);
 }

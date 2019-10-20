@@ -4,6 +4,7 @@
 
 #include "shared/shared.h"
 #include "utils/alloc/alloc.h"
+#include "struct/array-list/array-list.h"
 
 typedef struct StringPrototype StringPrototype;
 typedef struct StringWrapper String;
@@ -26,11 +27,11 @@ struct StringPrototype
     bool (*startsWith)(String *wrapper, string comparator);
     bool (*endsWith)(String *wrapper, string comparator);
     bool (*includes)(String *wrapper, string comparator);
-    void (*replace)();
-    void (*reverse)();
-    void (*trim)();
-    void (*slice)();
-    void (*split)();
+    String *(*replace)(String *wrapper, string substr, string newSubstr);
+    String *(*reverse)(String *wrapper);
+    String *(*trim)(String *wrapper);
+    String *(*slice)(String *wrapper, size_t start, size_t end);
+    ArrayList *(*split)();
     void (*subString)();
     void (*toString)();
 };
@@ -48,6 +49,10 @@ static String *StringConcat(String *wrapper, string source);
 static bool StringStartsWith(String *wrapper, string comparator);
 static bool StringEndsWith(String *wrapper, string comparator);
 static bool StringIncludes(String *wrapper, string comparator);
+static String *StringReplace(String *wrapper, string substr, string newSubstr);
+static String *StringReverse(String *wrapper);
+static String *StringTrim(String *wrapper);
+static String *StringSlice(String *wrapper, size_t start, size_t end);
 static void StringDestroy(String *wrapper);
 
 #endif

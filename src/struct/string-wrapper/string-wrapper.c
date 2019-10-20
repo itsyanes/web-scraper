@@ -34,6 +34,10 @@ StringPrototype *getStringProto()
         proto->includes = &StringIncludes;
         proto->startsWith = &StringStartsWith;
         proto->endsWith = &StringEndsWith;
+        proto->replace = &StringReplace;
+        proto->reverse = &StringReverse;
+        proto->trim = &StringTrim;
+        proto->slice = &StringSlice;
     }
     return proto;
 }
@@ -105,7 +109,12 @@ int StringLastIndexOf(String *wrapper, char element)
 
 String *StringConcat(String *wrapper, string source)
 {
-    size_t size = strlen(wrapper->string) + strlen(source) + 1;
+    if (!StringIsAllocated(wrapper))
+    {
+        return wrapper;
+    }
+
+    size_t size = wrapper->proto->length(wrapper) + strlen(source) + 1;
     string buffer = xmalloc(size, sizeof(char));
     strcpy(buffer, wrapper->string);
     strcat(buffer, source);
@@ -126,12 +135,105 @@ bool StringStartsWith(String *wrapper, string comparator)
 
 bool StringEndsWith(String *wrapper, string comparator)
 {
-    return strstr(wrapper->string, comparator) == wrapper->string + (strlen(wrapper->string) - strlen(comparator));
+    return strstr(wrapper->string, comparator) == wrapper->string + (wrapper->proto->length(wrapper) - strlen(comparator));
 }
 
 bool StringIncludes(String *wrapper, string comparator)
 {
     return strstr(wrapper->string, comparator) ? true : false;
+}
+
+String *StringReplace(String *wrapper, string substr, string newSubstr)
+{
+    if (!StringIsAllocated(wrapper))
+    {
+        return wrapper;
+    }
+
+    size_t destLength = wrapper->proto->length(wrapper);
+    size_t substrLength = strlen(substr);
+    size_t newSubstrLength = strlen(newSubstr);
+    size_t occurenceCount = 0;
+    string occurence = wrapper->string;
+
+    while ((occurence = strstr(occurence, substr)))
+    {
+        occurenceCount++;
+        occurence++;
+    }
+
+    size_t nbBlocks = destLength - substrLength * occurenceCount + newSubstrLength * occurenceCount + 1;
+    string newString = xmalloc(nbBlocks, sizeof(char));
+
+    string head = wrapper->string;
+    string tail = wrapper->string;
+    string cursor = newString;
+
+    while ((head = strstr(head, substr)))
+    {
+        strncpy(cursor, tail, head - tail);
+        cursor += head - tail;
+        strcpy(cursor, newSubstr);
+        cursor += newSubstrLength;
+        head++;
+        tail = head;
+    }
+
+    strcpy(cursor, tail);
+
+    free(wrapper->string);
+    wrapper->string = newString;
+
+    return wrapper;
+}
+
+String *StringReverse(String *wrapper)
+{
+    if (!StringIsAllocated(wrapper))
+    {
+        return wrapper;
+    }
+
+    string newString = xmalloc(wrapper->proto->length(wrapper) + 1, sizeof(char));
+
+    for (int i = 0; i < wrapper->proto->length(wrapper); i++)
+    {
+        newString[i] = wrapper->string[wrapper->proto->length(wrapper) - 1 - i];
+    }
+    newString[wrapper->proto->length(wrapper)] = '\0';
+
+    free(wrapper->string);
+    wrapper->string = newString;
+
+    return wrapper;
+}
+
+String *StringTrim(String *wrapper)
+{
+    // TO DO IMPLEMENT LATER
+    return wrapper;
+}
+
+String *StringSlice(String *wrapper, size_t start, size_t end)
+{
+    if (!StringIsAllocated(wrapper) || start >= wrapper->proto->length(wrapper) || end <= start)
+    {
+        return newString();
+    }
+
+    if (end > wrapper->proto->length(wrapper))
+    {
+        end = wrapper->proto->length(wrapper);
+    }
+    
+    String *newWrapper = newString();
+    string new = xmalloc(end - start + 1, sizeof(char));
+
+    strncpy(new, wrapper->string + start, end - start);
+    new[end - start] = '\0';
+
+    newWrapper->string = new;
+    return newWrapper;
 }
 
 void StringDestroy(String *wrapper)
