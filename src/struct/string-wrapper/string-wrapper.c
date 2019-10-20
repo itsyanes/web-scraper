@@ -31,6 +31,9 @@ StringPrototype *getStringProto()
         proto->indexOf = &StringIndexOf;
         proto->lastIndexOf = &StringLastIndexOf;
         proto->concat = &StringConcat;
+        proto->includes = &StringIncludes;
+        proto->startsWith = &StringStartsWith;
+        proto->endsWith = &StringEndsWith;
     }
     return proto;
 }
@@ -114,6 +117,21 @@ String *StringConcat(String *wrapper, string source)
 
     wrapper->string = buffer;
     return wrapper;
+}
+
+bool StringStartsWith(String *wrapper, string comparator)
+{
+    return strstr(wrapper->string, comparator) == wrapper->string;
+}
+
+bool StringEndsWith(String *wrapper, string comparator)
+{
+    return strstr(wrapper->string, comparator) == wrapper->string + (strlen(wrapper->string) - strlen(comparator));
+}
+
+bool StringIncludes(String *wrapper, string comparator)
+{
+    return strstr(wrapper->string, comparator) ? true : false;
 }
 
 void StringDestroy(String *wrapper)

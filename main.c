@@ -15,5 +15,8 @@ int main(int argc, char **argv)
     wrapper->proto->concat(wrapper, " or is he?");
     puts(wrapper->string);
     printf("length: %lu\n", wrapper->proto->length(wrapper));
+    printf("includes: %d, includes: %d\n", wrapper->proto->includes(wrapper, "toto"), wrapper->proto->includes(wrapper, "titi"));
+    printf("startsWith: %d, startsWith: %d\n", wrapper->proto->startsWith(wrapper, "toto"), wrapper->proto->startsWith(wrapper, "years"));
+    printf("endsWith: %d, endsWith: %d\n", wrapper->proto->endsWith(wrapper, "old."), wrapper->proto->endsWith(wrapper, "he?"));
     wrapper->proto->destroy(wrapper);
 }

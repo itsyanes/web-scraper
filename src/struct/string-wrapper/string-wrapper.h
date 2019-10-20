@@ -23,10 +23,12 @@ struct StringPrototype
     int (*indexOf)(String *wrapper, char element);
     int (*lastIndexOf)(String *wrapper, char element);
     String *(*concat)(String *wrapper, string source);
-    bool (*startsWith)();
-    bool (*endsWith)();
-    bool (*includes)();
+    bool (*startsWith)(String *wrapper, string comparator);
+    bool (*endsWith)(String *wrapper, string comparator);
+    bool (*includes)(String *wrapper, string comparator);
     void (*replace)();
+    void (*reverse)();
+    void (*trim)();
     void (*slice)();
     void (*split)();
     void (*subString)();
@@ -43,6 +45,9 @@ static char StringCharAt(String *wrapper, size_t index);
 static int StringIndexOf(String *wrapper, char element);
 static int StringLastIndexOf(String *wrapper, char element);
 static String *StringConcat(String *wrapper, string source);
+static bool StringStartsWith(String *wrapper, string comparator);
+static bool StringEndsWith(String *wrapper, string comparator);
+static bool StringIncludes(String *wrapper, string comparator);
 static void StringDestroy(String *wrapper);
 
 #endif
