@@ -25,3 +25,7 @@ docker run --rm -v ${PWD}:/dev/test -w  /dev/test gcc:9.2 make all
 docker pull debian:10.1
 docker run --rm -v ${PWD}/bin:/dev/test -w /dev/test debian:10.1 ./wscrap [OPTIONS]
 ```
+
+## Documentation
+
+Check the project documentation [here](https://theghostspirit.github.io/web-scraper/).

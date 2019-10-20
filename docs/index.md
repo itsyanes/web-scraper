@@ -4,7 +4,7 @@ Web-Scraper is a command-line application used to extract data from any website.
 
 ## Getting Started
 
-This repos does not provide any binaries, therefore you will have to compile the program yourself. Further installations instructions are available on the README of the github repos page. Once compiled through Docker the program should run on most GNU/Linux based distributions.
+This repos does not provide any binaries, therefore you will have to compile the program yourself. Further installations instructions are available on the README of the [github repos page](https://github.com/TheGhostSpirit/web-scraper). Once compiled through Docker the program should run on most GNU/Linux based distributions.
 
 ## How to use
 
