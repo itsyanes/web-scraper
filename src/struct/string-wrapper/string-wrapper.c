@@ -210,7 +210,31 @@ String *StringReverse(String *wrapper)
 
 String *StringTrim(String *wrapper)
 {
-    // TO DO IMPLEMENT LATER
+    int start = 0;
+    int end = wrapper->proto->length(wrapper) - 1;
+
+    for (int i = 0; i < wrapper->proto->length(wrapper); i++)
+    {
+        if (wrapper->string[i] > 33 && wrapper->string[i] < 127)
+        {
+           break;
+        }
+        start++;
+    }
+
+    for (int i = wrapper->proto->length(wrapper) - 1; i > 0; i--)
+    {
+        if (wrapper->string[i] > 33 && wrapper->string[i] < 127)
+        {
+           break;
+        }
+        end--;
+    }
+
+    String *new = wrapper->proto->slice(wrapper, start, end + 1);
+    strcpy(wrapper->string, new->string);
+    new->proto->destroy(new);
+
     return wrapper;
 }
 
@@ -225,7 +249,7 @@ String *StringSlice(String *wrapper, size_t start, size_t end)
     {
         end = wrapper->proto->length(wrapper);
     }
-    
+
     String *newWrapper = newString();
     string new = xmalloc(end - start + 1, sizeof(char));
 

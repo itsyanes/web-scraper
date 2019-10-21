@@ -29,4 +29,8 @@ int main(int argc, char **argv)
     puts(wrapper2->string);
     wrapper->proto->destroy(wrapper);
     wrapper2->proto->destroy(wrapper2);
+    wrapper = wrapString(" elancourt");
+    puts(wrapper->string);
+    wrapper->proto->trim(wrapper);
+    puts(wrapper->string);
 }
