@@ -34,6 +34,7 @@ struct StringPrototype
     ArrayList *(*split)();
     void (*subString)();
     void (*toString)();
+    void (*clone)();
 };
 
 String *newString();

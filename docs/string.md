@@ -70,7 +70,7 @@ Allocates a new instance of String with the string given in parameter.
 ##### Example
 
 ```c
-String *new = wrapString("toto");
+String *new = wrapString("foo");
 ```
 
 ### string
@@ -80,9 +80,9 @@ Pointer to the string stored in-memory. You may read its value but never write t
 ##### Example
 
 ```c
-String *str = wrapString("toto");
+String *str = wrapString("foo");
 puts(str->string);
-//prints "toto" to stdout
+//prints "foo" to stdout
 ```
 
 ### proto
@@ -92,7 +92,7 @@ Pointer to the String's prototype containing all methods.
 ##### Example
 
 ```c
-String *str = wrapString("toto");
+String *str = wrapString("foo");
 str->proto->someMethod();
 //calls a method named someMethod from the prototype
 ```
@@ -109,9 +109,9 @@ Returns the length of the String.
 ##### Example
 
 ```c
-String *str = wrapString("toto");
+String *str = wrapString("foo");
 str->proto->length(str);
-//returns 4
+//returns 3
 ```
 
 ### destroy
@@ -126,7 +126,7 @@ Deallocates the String instance.
 ##### Example
 
 ```c
-String *str = wrapString("toto");
+String *str = wrapString("foo");
 str->proto->destroy(str);
 //deallocates str
 ```
@@ -146,9 +146,9 @@ Builds a string following a given format. build is a variadic function: meaning 
 
 ```c
 String *str = newString();
-str->proto->build(str, "%s is %d", "titi", 12);
+str->proto->build(str, "%s is %d", "bar", 12);
 puts(str->string);
-//prints "titi is 12"
+//prints "bar is 12"
 ```
 
 ### charAt
@@ -164,177 +164,192 @@ Returns the char at the given position of the String.
 ##### Example
 
 ```c
-String *str = wrapString("toto");
+String *str = wrapString("foo");
 char t = str->proto->charAt(str, 2);
-//t's value is 't'
+//t's value is 'o'
 ```
 
 ### indexOf
 
-Deallocates the String instance.
+Returns the first occurence of the char given as a parameter in the string.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- element (char): the char to find.
 
-**Returns:** void.
+**Returns:** the index of the char or -1 if it isn't present in the string.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foo");
+str->proto->indexOf(str, 'o');
+//returns 1
 ```
 
-### destroy
+### lastIndexOf
 
-Deallocates the String instance.
+Returns the last occurence of the char given as a parameter in the string.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- element (char): the char to find.
 
-**Returns:** void.
+**Returns:** the index of the char or -1 if it isn't present in the string.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foo");
+str->proto->lastIndexOf(str, 'o');
+//returns 2
 ```
 
-### destroy
+### concat
 
-Deallocates the String instance.
+Appends a string to the String instance.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- source (string): the string to append.
 
-**Returns:** void.
+**Returns:** a pointer to the String.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foo");
+str->proto->concat(str, "bar");
+puts(str->string);
+//prints "foobar"
 ```
 
-### destroy
+### startsWith
 
-Deallocates the String instance.
+Checks if a String starts with the string passed as parameter.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- comparator (string): the string to compare to.
 
-**Returns:** void.
+**Returns:** true if the String starts with the comparator, false otherwise.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foo");
+str->proto->startsWith(str, "fo");
+//returns true
 ```
 
-### destroy
+### endsWith
 
-Deallocates the String instance.
+Checks if a String ends with the string passed as parameter.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- comparator (string): the string to compare to.
 
-**Returns:** void.
+**Returns:** true if the String ends with the comparator, false otherwise.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foo");
+str->proto->endsWith(str, "oo");
+//returns true
 ```
 
-### destroy
+### includes
 
-Deallocates the String instance.
+Checks if a String contains the string passed as parameter.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- comparator (string): the string to compare to.
 
-**Returns:** void.
+**Returns:** true if the String contains the comparator, false otherwise.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foobar");
+str->proto->includes(str, "ob");
+//returns true
 ```
 
-### destroy
+### replace
 
-Deallocates the String instance.
+Replaces all ocurrences of the first substring with the second substring in the String.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- substr (string): the substring to look for in the String.
+- newSubstr (string): the substring to replace each occurence with.
 
-**Returns:** void.
+**Returns:** A pointer to the String.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foobarfoobar");
+str->proto->replace(str, "foo", "bar");
+puts(str->string);
+//prints "barbarbarbar"
 ```
 
-### destroy
+### reverse
 
-Deallocates the String instance.
+Reverses the order of every character of the String.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
 
-**Returns:** void.
+**Returns:** a pointer to the reversed String.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foo");
+str->proto->reverse(str);
+puts(str->string)
+//prints "oof"
 ```
 
-### destroy
+### trim
 
-Deallocates the String instance.
+Removes every space, tab, newline characters at both the beginning and the end of this String.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
 
-**Returns:** void.
+**Returns:** a pointer to the modified String.
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("  foo  ");
+str->proto->trim(str);
+puts(str->string);
+//prints "foo"
 ```
 
-### destroy
+### slice
 
-Deallocates the String instance.
+Returns the substring between the indexes passed as parameter.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
+- start (size_t): the index of the start of the portion to be cut.
+- end (size_t): the index of the end of the portion to be cut (the character at the index of the ending position is not included).
 
-**Returns:** void.
+**Returns:** A pointer to a newly allocated instance of String (remember to deallocate both !).
 
 ##### Example
 
 ```c
-String *str = wrapString("toto");
-str->proto->destroy(str);
-//deallocates str
+String *str = wrapString("foobar");
+String *new = str->proto->slice(str, 1, 4);
+puts(new->string);
+//prints "oob"
 ```
