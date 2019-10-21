@@ -11,6 +11,13 @@ void *xmalloc(size_t nbBlocks, size_t blockSize)
     return ptr;
 }
 
+void *xcalloc(size_t nbBlocks, size_t blockSize)
+{
+    void *ptr = xmalloc(nbBlocks, blockSize);
+    memset(ptr, 0, nbBlocks * blockSize);
+    return ptr;
+}
+
 void *xrealloc(void *src, size_t nbBlocks, size_t blockSize)
 {
     void *dest = realloc(src, nbBlocks * blockSize);

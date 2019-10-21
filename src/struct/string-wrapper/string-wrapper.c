@@ -38,6 +38,8 @@ StringPrototype *getStringProto()
         proto->reverse = &StringReverse;
         proto->trim = &StringTrim;
         proto->slice = &StringSlice;
+        proto->toString = &StringToString;
+        proto->clone = &StringClone;
     }
     return proto;
 }
@@ -217,7 +219,7 @@ String *StringTrim(String *wrapper)
     {
         if (wrapper->string[i] > 33 && wrapper->string[i] < 127)
         {
-           break;
+            break;
         }
         start++;
     }
@@ -226,7 +228,7 @@ String *StringTrim(String *wrapper)
     {
         if (wrapper->string[i] > 33 && wrapper->string[i] < 127)
         {
-           break;
+            break;
         }
         end--;
     }
@@ -258,6 +260,29 @@ String *StringSlice(String *wrapper, size_t start, size_t end)
 
     newWrapper->string = new;
     return newWrapper;
+}
+
+string StringToString(String *wrapper)
+{
+    if (!StringIsAllocated(wrapper))
+    {
+        return xcalloc(1, sizeof(char));
+    }
+
+    string str = wrapper->string;
+    free(wrapper);
+
+    return str;
+}
+
+String *StringClone(String *wrapper)
+{
+    if (!StringIsAllocated(wrapper))
+    {
+        return newString();
+    }
+
+    return wrapString(wrapper->string);
 }
 
 void StringDestroy(String *wrapper)

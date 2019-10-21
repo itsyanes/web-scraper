@@ -40,8 +40,7 @@ Methods of the prototype of String.
 1. [reverse](#reverse)
 1. [trim](#trim)
 1. [slice](#slice)
-1. [split](#split)
-1. [subString](#substring)
+1. [clone](#clone)
 1. [toString](#tostring)
 
 ## Contents
@@ -352,4 +351,40 @@ String *str = wrapString("foobar");
 String *new = str->proto->slice(str, 1, 4);
 puts(new->string);
 //prints "oob"
+```
+
+### clone
+
+Returns a deep copy of the String.
+
+**Parameters:** 
+- wrapper (String *): a pointer to a String wrapper.
+
+**Returns:** A pointer to a newly allocated instance of String (remember to deallocate both !).
+
+##### Example
+
+```c
+String *str = wrapString("foobar");
+String *new = str->proto->clone(str);
+puts(new->string);
+//prints "foobar"
+```
+
+### toString
+
+Destroy the Wrapper and returns the string: a simple pointer to memory.
+
+**Parameters:** 
+- wrapper (String *): a pointer to a String wrapper.
+
+**Returns:** A pointer to the string. It is your duty to perform a free() on this string.
+
+##### Example
+
+```c
+String *str = wrapString("foobar");
+string st = str->proto->toString(str);
+puts(st);
+//prints "foobar"
 ```

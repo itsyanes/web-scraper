@@ -7,7 +7,9 @@ int reducer(int accumulator, char currentValue)
 
 int main(int argc, char **argv)
 {
-    String *wrapper = newString();
+    String *wrapper3 = newString();
+    String *wrapper = wrapper3->proto->clone(wrapper3);
+    wrapper3->proto->destroy(wrapper3);
     wrapper->proto->build(wrapper, "%s%s%s%d%s", "toto", " ", "is ", 12, " years old.");
     puts(wrapper->string);
     printf("length: %lu, charAt: %d %d\n", wrapper->proto->length(wrapper), wrapper->proto->charAt(wrapper, 1000), wrapper->proto->charAt(wrapper, 14));
@@ -32,5 +34,7 @@ int main(int argc, char **argv)
     wrapper = wrapString(" elancourt");
     puts(wrapper->string);
     wrapper->proto->trim(wrapper);
-    puts(wrapper->string);
+    string str = wrapper->proto->toString(wrapper);
+    puts(str);
+    free(str);
 }

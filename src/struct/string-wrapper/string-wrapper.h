@@ -31,10 +31,9 @@ struct StringPrototype
     String *(*reverse)(String *wrapper);
     String *(*trim)(String *wrapper);
     String *(*slice)(String *wrapper, size_t start, size_t end);
-    ArrayList *(*split)();
-    void (*subString)();
-    void (*toString)();
-    void (*clone)();
+    string (*toString)(String *wrapper);
+    String *(*clone)(String *wrapper);
+    //ArrayList *(*split)(); -- wait ArrayList for implem
 };
 
 String *newString();
@@ -54,6 +53,8 @@ static String *StringReplace(String *wrapper, string substr, string newSubstr);
 static String *StringReverse(String *wrapper);
 static String *StringTrim(String *wrapper);
 static String *StringSlice(String *wrapper, size_t start, size_t end);
+static string StringToString(String *wrapper);
+static String *StringClone(String *wrapper);
 static void StringDestroy(String *wrapper);
 
 #endif
