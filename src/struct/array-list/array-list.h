@@ -9,6 +9,9 @@ typedef struct ArrayListPrototype ArrayListPrototype;
 typedef struct ArrayList ArrayList;
 
 struct ArrayListPrototype {
+    void (*add)();
+    void (*delete)();
+    void (*deleteAt)();
     void (*concat)();
     void (*fill)();
     void (*every)();
@@ -19,15 +22,11 @@ struct ArrayListPrototype {
     void (*includes)();
     void (*indexOf)();
     void (*map)();
-    void (*pop)();
-    void (*push)();
     void (*reduce)();
-    void (*shift)();
     void (*slice)();
-    void (*unshift)();
     void (*some)();
     void (*sort)();
-    void (*desroy)();
+    void (*destroy)();
 };
 
 struct ArrayList {
