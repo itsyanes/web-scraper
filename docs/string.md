@@ -12,8 +12,8 @@ This Module provides String not to be confused with string. string are just a ma
 
 Provided functions related to Strings.
 
-1. [newString](#newString)
-1. [wrapString](#wrapString)
+1. [newString](#newstring)
+1. [wrapString](#wrapstring)
 
 #### Properties
 
@@ -29,24 +29,24 @@ Methods of the prototype of String.
 1. [length](#length)
 1. [destroy](#destroy)
 1. [build](#build)
-1. [charAt](#charAt)
-1. [indexOf](#indexOf)
-1. [lastIndexOf](#lastIndexOf)
+1. [charAt](#charat)
+1. [indexOf](#indexof)
+1. [lastIndexOf](#lastindexof)
 1. [concat](#concat)
-1. [startsWith](#startsWith)
-1. [endsWith](#endsWith)
+1. [startsWith](#startswith)
+1. [endsWith](#endswith)
 1. [includes](#includes)
 1. [replace](#replace)
 1. [reverse](#reverse)
 1. [trim](#trim)
 1. [slice](#slice)
 1. [split](#split)
-1. [subString](#subString)
-1. [toString](#toString)
+1. [subString](#substring)
+1. [toString](#tostring)
 
-### Contents
+## Contents
 
-#### newString
+### newString
 
 Allocates a new instance of String.
 
@@ -58,7 +58,7 @@ Allocates a new instance of String.
 String *new = newString();
 ```
 
-#### wrapString
+### wrapString
 
 Allocates a new instance of String with the string given in parameter.
 
@@ -73,7 +73,7 @@ Allocates a new instance of String with the string given in parameter.
 String *new = wrapString("toto");
 ```
 
-#### string
+### string
 
 Pointer to the string stored in-memory. You may read its value but never write to it!
 
@@ -85,7 +85,7 @@ puts(str->string);
 //prints "toto" to stdout
 ```
 
-#### proto
+### proto
 
 Pointer to the String's prototype containing all methods.
 
@@ -97,7 +97,7 @@ str->proto->someMethod();
 //calls a method named someMethod from the prototype
 ```
 
-#### length
+### length
 
 Returns the length of the String.
 
@@ -114,7 +114,7 @@ str->proto->length(str);
 //returns 4
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -131,9 +131,9 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### build
+### build
 
-Builds a string following a given format. build is a variadic meaning it can receive a non-fix amount of parameters. It is very similar to sprintf.
+Builds a string following a given format. build is a variadic function: meaning it can receive a non-fix amount of parameters. It is very similar to sprintf.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
@@ -151,7 +151,7 @@ puts(str->string);
 //prints "titi is 12"
 ```
 
-#### charAt
+### charAt
 
 Returns the char at the given position of the String.
 
@@ -169,7 +169,7 @@ char t = str->proto->charAt(str, 2);
 //t's value is 't'
 ```
 
-#### indexOf
+### indexOf
 
 Deallocates the String instance.
 
@@ -186,7 +186,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -203,7 +203,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -220,7 +220,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -237,7 +237,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -254,7 +254,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -271,7 +271,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -288,7 +288,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -305,7 +305,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
@@ -322,7 +322,7 @@ str->proto->destroy(str);
 //deallocates str
 ```
 
-#### destroy
+### destroy
 
 Deallocates the String instance.
 
