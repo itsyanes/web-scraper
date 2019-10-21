@@ -14,10 +14,10 @@ TO DO.
 
 ### Structures
 
-- Strings.
+- [Strings](./string.md)
 
-- ArrayList.
+- ArrayList
 
-- Map.
+- Map
 
-- Tree.
+- Tree
