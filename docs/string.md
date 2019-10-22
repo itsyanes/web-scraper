@@ -1,10 +1,10 @@
 ## Strings
 
-This functions are built on top of string.h functions. They add a smoother way of handling strings without having to worry too much about the underlying constraints of C strings.
+These functions are built on top of string.h functions. They add a smoother way of handling strings without having to worry too much about the underlying constraints of C strings.
 
 ### Description
 
-This Module provides String not to be confused with string. string are just a macro for char * whereas String is a higher-level wrapper for string instances. String structures contain a pointer to a Prototype object that contains a pointer to all String methods. Therefore, all String methods are accessed through its Prototype as shown in the examples below.
+This Module provides String not to be confused with string. string are just a macro for char * whereas String is a higher-level wrapper for string instances. String structures contain a pointer to a Prototype object that contains a pointer to all String methods. Therefore, all String methods are accessed through its Prototype as shown in the examples below. Every String handles its own string object, if you supply another allocated string to any of the functions taking a string as a parameter, you could free it right after the function call as it is not needed by the String wrapper. You could also supply a string litteral if it is more suitable to your needs as it will not impact the way a String instance works.
 
 ### Table of Contents
 
