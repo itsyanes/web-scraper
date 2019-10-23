@@ -35,12 +35,13 @@ struct ArrayList
 {
     void **list;
     size_t size;
+    size_t contained;
     ArrayListPrototype *proto;
 };
 
 ArrayList *newArrayList();
-ArrayList *fromArray(void *source, size_t nbBlocks, size_t blockSize);
 static ArrayListPrototype *getArrayListProto();
+static void ArrayListExpand(ArrayList *list);
 static ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end);
 static ArrayList *ArrayListAdd(ArrayList *list, void *value);
 static ArrayList *ArrayListDelete(ArrayList *list, void *value);

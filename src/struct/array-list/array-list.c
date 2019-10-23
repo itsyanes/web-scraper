@@ -9,22 +9,6 @@ ArrayList *newArrayList()
     return list;
 }
 
-ArrayList *fromArray(void *source, size_t nbBlocks, size_t blockSize)
-{
-    ArrayList *list = xmalloc(1, sizeof(ArrayList));
-    list->list = xmalloc(nbBlocks, sizeof(void *));
-    printf("%p\n", ((char *)source));
-    for (int i = 0; i < nbBlocks; i++)
-    {
-        byte *casted = (byte *)source;
-        list->list[i] = casted + i * blockSize;
-    }
-
-    list->size = nbBlocks;
-    list->proto = getArrayListProto();
-    return list;
-}
-
 ArrayListPrototype *getArrayListProto()
 {
     static ArrayListPrototype *proto = NULL;
@@ -39,6 +23,11 @@ ArrayListPrototype *getArrayListProto()
     return proto;
 }
 
+void ArrayListExpand(ArrayList *list)
+{
+    list->list = xrealloc(list->list, list->size + 16, sizeof(void *));
+}
+
 ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end)
 {
     return list;
@@ -46,6 +35,10 @@ ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end)
 
 ArrayList *ArrayListAdd(ArrayList *list, void *value)
 {
+    if (list->contained == list->size)
+    {
+        ArrayListExpand(list);
+    }
     return list;
 }
 
