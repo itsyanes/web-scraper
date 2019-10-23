@@ -13,10 +13,11 @@ ArrayList *fromArray(void *source, size_t nbBlocks, size_t blockSize)
 {
     ArrayList *list = xmalloc(1, sizeof(ArrayList));
     list->list = xmalloc(nbBlocks, sizeof(void *));
-
+    printf("%p\n", ((char *)source));
     for (int i = 0; i < nbBlocks; i++)
     {
-        list->list[i] = (char *)source + (i * blockSize);
+        byte *casted = (byte *)source;
+        list->list[i] = casted + i * blockSize;
     }
 
     list->size = nbBlocks;

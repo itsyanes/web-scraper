@@ -8,7 +8,13 @@
 #include <stdarg.h>
 #include <string.h>
 
+typedef char byte;
 typedef char *string;
+
+#ifndef __MINGW32__
+
 typedef unsigned long size_t;
+
+#endif
 
 #endif
