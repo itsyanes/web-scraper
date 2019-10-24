@@ -14,9 +14,9 @@ TO DO.
 
 ### Structures
 
-- [Strings](./string.md)
+- [String](./string.md)
 
-- ArrayList
+- [ArrayList](./array-list.md)
 
 - Map
 

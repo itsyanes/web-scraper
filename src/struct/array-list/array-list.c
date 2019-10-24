@@ -16,38 +16,52 @@ ArrayListPrototype *getArrayListProto()
     {
         proto = xmalloc(1, sizeof(ArrayListPrototype));
         proto->fill = &ArrayListFill;
-        proto->add = &ArrayListAdd;
-        proto->delete = &ArrayListDelete;
-        proto->deleteAt = &ArrayListDeleteAt;
+        proto->push = &ArrayListPush;
+        proto->pop = &ArrayListPop;
     }
     return proto;
 }
 
+bool ArrayListIsAllocated(ArrayList *list)
+{
+    return list->list != NULL;
+}
+
 void ArrayListExpand(ArrayList *list)
 {
-    list->list = xrealloc(list->list, list->size + 16, sizeof(void *));
+    list->size += ARRAY_LIST_SIZE_INCREMENT;
+    list->list = xrealloc(list->list, list->size + ARRAY_LIST_SIZE_INCREMENT, sizeof(void *));
 }
 
 ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end)
 {
+    if (!ArrayListIsAllocated(list) || start > end || end > list->contained)
+    {
+        return list;
+    }
+
+    for (int i = start; i < end; i++)
+    {
+        list->list[i] = value;
+    }
+
     return list;
 }
 
-ArrayList *ArrayListAdd(ArrayList *list, void *value)
+ArrayList *ArrayListPush(ArrayList *list, void *value)
 {
     if (list->contained == list->size)
     {
         ArrayListExpand(list);
     }
+
+    list->list[list->contained] = value;
+    list->contained++;
     return list;
 }
 
-ArrayList *ArrayListDelete(ArrayList *list, void *value)
+void *ArrayListPop(ArrayList *list)
 {
-    return list;
-}
-
-ArrayList *ArrayListDeleteAt(ArrayList *list, size_t index)
-{
-    return list;
+    list->contained--;
+    return list->list[list->contained];
 }

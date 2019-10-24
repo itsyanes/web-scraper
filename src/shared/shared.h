@@ -8,7 +8,6 @@
 #include <stdarg.h>
 #include <string.h>
 
-typedef char byte;
 typedef char *string;
 
 #ifndef __MINGW32__
