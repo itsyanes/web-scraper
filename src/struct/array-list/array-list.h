@@ -30,13 +30,15 @@ struct ArrayListPrototype
     ArrayList *(*sort)(ArrayList *list, size_t (*sortFunc)(void *element));
     ArrayList *(*clone)(ArrayList *list);
     void (*destroy)(ArrayList *list, void (*hook)(void *element));
+    void (*get)();
+    void (*set)();
 };
 
 struct ArrayList
 {
-    void **list;
+    void **_list;
+    size_t _blocks;
     size_t size;
-    size_t contained;
     ArrayListPrototype *proto;
 };
 

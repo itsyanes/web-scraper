@@ -2,17 +2,17 @@
 
 void debug(ArrayList *list)
 {
-    for (int i = 0; i < list->contained; i++)
+    for (int i = 0; i < list->size; i++)
     {
-        puts((char *)list->list[i]);
+        puts((char *)list->_list[i]);
     }
 }
 
 void debugInt(ArrayList *list)
 {
-    for (int i = 0; i < list->contained; i++)
+    for (int i = 0; i < list->size; i++)
     {
-        printf("%d\n", (*(int *)list->list[i]));
+        printf("%d\n", (*(int *)list->_list[i]));
     }
 }
 
