@@ -5,6 +5,7 @@ ArrayList *newArrayList()
     ArrayList *list = xmalloc(1, sizeof(ArrayList));
     list->_list = NULL;
     list->_blocks = 0;
+    list->size = 0;
     list->proto = getArrayListProto();
     return list;
 }
@@ -75,4 +76,16 @@ void *ArrayListPop(ArrayList *list)
     list->size--;
 
     return list->_list[list->size];
+}
+
+ArrayList *clone(ArrayList *list)
+{
+    ArrayList *new = newArrayList();
+
+    for (int i = 0; i < list->size; i++)
+    {
+        new->proto->push(new, list->_list[i]);
+    }
+
+    return new;
 }
