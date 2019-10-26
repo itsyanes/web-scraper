@@ -4,7 +4,7 @@ These functions are built to lessen the burden of having to manage dynamic array
 
 ### Description
 
-This Module provides ArrayLists which rely on allocation/reallocation to keep the smallest memory footprint possible. You may provide any data pointer to an ArrayList, and they will be kept in memory by the list. Keep in mind the list will only keep the pointer and will not attempt to copy the data it references so it is preferable if those pointers reference heap chunks (allocated via malloc()). Otherwise, the chunks will be freed automatically at the end of their lifetime (end of function call for example) and the pointers stored will reference corrupted memory (= undefined behavior). The destroy function will provide a hook for you to free the objects you passed to the list, so you don't have to keep an inventory of all the pointers that reference allocated memory, if you added them to an ArrayList. Most ArrayList methods will return shallow copies of ArrayList and do not modifiy the provided ArrayList directly. Remember that only one ArrayList needs to free the referenced object, the other need to pass NULL as the hook parameter whilst calling destroy. Note that the ArrayList keeps the order in which you inserted item inside of it. ArrayList structures contain a pointer to a Prototype object that contains a pointer to all ArrayList methods. Therefore, all ArrayList methods are accessed through their Prototype as shown in the examples below.
+This Module provides ArrayLists which rely on allocation/reallocation to keep the smallest memory footprint possible. You may provide any data pointer to an ArrayList, and they will be kept in memory by the list. Keep in mind the list will only keep the pointer and will not attempt to copy the data it references so it is preferable if those pointers reference heap chunks (allocated via malloc()). Otherwise, the chunks will be freed automatically at the end of their lifetime (end of function call for example) and the pointers stored will reference corrupted memory (= undefined behavior). The destroy function will provide a hook for you to free the objects you passed to the list, so you don't have to keep an inventory of all the pointers that reference allocated memory, if you added them to an ArrayList. Most ArrayList methods will return shallow copies of ArrayList and do not modifiy the provided ArrayList directly. Remember that only one ArrayList needs to free the referenced object, the others need to pass NULL as the hook parameter whilst calling destroy. Note that the ArrayList keeps the order in which you inserted item inside of it. ArrayList structures contain a pointer to a Prototype object that contains a pointer to all ArrayList methods. Therefore, all ArrayList methods are accessed through their Prototype as shown in the examples below.
 
 ### Table of Contents
 
@@ -126,7 +126,7 @@ Start index must be smaller than end index and end index must be smaller or equa
 - start (size_t): starting index.
 - end (size_t): ending index.
 
-**Returns:** a pointer to a shallow copy of the filled ArrayList.
+**Returns:** a pointer to a shallow copy of the filled ArrayList if parameters are valid, otherwise a pointer to the original list.
 
 ##### Example
 
@@ -134,6 +134,6 @@ Start index must be smaller than end index and end index must be smaller or equa
 ArrayList *list = newArrayList();
 list->proto->push(ptr1);
 list->proto->push(ptr2);
-list->proto->fill(list, ptr1, 0, 2);
-//list is now composed from 2 pointers: ptr1 ptr1.
+ArrayList *list2 = list->proto->fill(list, ptr1, 0, 2);
+//list2 is composed from 2 pointers: ptr1 ptr1.
 ```

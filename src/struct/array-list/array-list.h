@@ -15,6 +15,8 @@ struct ArrayListPrototype
     ArrayList *(*fill)(ArrayList *list, void *value, size_t start, size_t end);
     ArrayList *(*push)(ArrayList *list, void *value);
     void *(*pop)(ArrayList *list);
+    void *(*get)(ArrayList *list, size_t index);
+    void (*set)(ArrayList *list, size_t index, void *value);
     ArrayList *(*concat)(ArrayList *list, ArrayList *list2);
     bool (*every)(ArrayList *list, bool (*test)(void *element, size_t index));
     ArrayList *(*filter)(ArrayList *list, bool (*test)(void *element, size_t index));
@@ -30,8 +32,6 @@ struct ArrayListPrototype
     ArrayList *(*sort)(ArrayList *list, size_t (*sortFunc)(void *element));
     ArrayList *(*clone)(ArrayList *list);
     void (*destroy)(ArrayList *list, void (*hook)(void *element));
-    void (*get)();
-    void (*set)();
 };
 
 struct ArrayList
@@ -49,5 +49,6 @@ static void ArrayListExpand(ArrayList *list);
 static ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end);
 static ArrayList *ArrayListPush(ArrayList *list, void *value);
 static void *ArrayListPop(ArrayList *list);
+static ArrayList *ArrayListClone(ArrayList *list);
 
 #endif

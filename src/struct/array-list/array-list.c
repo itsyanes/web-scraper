@@ -19,6 +19,7 @@ ArrayListPrototype *getArrayListProto()
         proto->fill = &ArrayListFill;
         proto->push = &ArrayListPush;
         proto->pop = &ArrayListPop;
+        proto->clone = &ArrayListClone;
     }
     return proto;
 }
@@ -41,21 +42,18 @@ ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end)
         return list;
     }
 
+    ArrayList *new = list->proto->clone(list);
+
     for (int i = start; i < end; i++)
     {
-        list->_list[i] = value;
+        new->_list[i] = value;
     }
 
-    return list;
+    return new;
 }
 
 ArrayList *ArrayListPush(ArrayList *list, void *value)
 {
-    if (!ArrayListIsAllocated(list))
-    {
-        return list;
-    }
-
     if (list->size == list->_blocks)
     {
         ArrayListExpand(list);
@@ -78,7 +76,7 @@ void *ArrayListPop(ArrayList *list)
     return list->_list[list->size];
 }
 
-ArrayList *clone(ArrayList *list)
+ArrayList *ArrayListClone(ArrayList *list)
 {
     ArrayList *new = newArrayList();
 

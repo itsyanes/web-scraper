@@ -23,8 +23,7 @@ int main(int argc, char **argv)
     ArrayList *list = newArrayList();
     list->proto->push(list, toto);
     list->proto->push(list, titi);
-    debug(list);
-    puts(list->proto->pop(list));
-    debug(list);
+    ArrayList *l2 = list->proto->fill(list, toto, 0, 2);
+    debug(l2);
     return 0;
 }
