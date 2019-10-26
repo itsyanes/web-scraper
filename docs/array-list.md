@@ -30,6 +30,7 @@ Methods of the prototype of ArrayList.
 1. [push](#push)
 1. [pop](#pop)
 1. [fill](#fill)
+1. [clone](#clone)
 
 ## Contents
 
@@ -136,4 +137,23 @@ list->proto->push(ptr1);
 list->proto->push(ptr2);
 ArrayList *list2 = list->proto->fill(list, ptr1, 0, 2);
 //list2 is composed from 2 pointers: ptr1 ptr1.
+```
+
+### clone
+
+Retuns a shallow copy of this ArrayList.
+
+**Parameters:** 
+- list (ArrayList *): a pointer to an ArrayList.
+
+**Returns:** a pointer to a shallow copy of the filled ArrayList.
+
+##### Example
+
+```c
+ArrayList *list = newArrayList();
+list->proto->push(ptr1);
+list->proto->push(ptr2);
+ArrayList *list2 = list->proto->clone(list);
+//list2 is composed from 2 pointers: ptr1 ptr2.
 ```
