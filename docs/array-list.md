@@ -31,6 +31,8 @@ Methods of the prototype of ArrayList.
 1. [pop](#pop)
 1. [fill](#fill)
 1. [clone](#clone)
+1. [get](#get)
+1. [set](#set)
 
 ## Contents
 
@@ -84,7 +86,7 @@ Adds an element at the end of list.
 
 **Parameters:** 
 - list (ArrayList *): a pointer to an ArrayList.
-- value (void *): a pointer to the element to add.
+- value (void *): the element to add.
 
 **Returns:** the pointer to the ArrayList.
 
@@ -104,7 +106,7 @@ Removes the last element of the list. You may free it once your application does
 **Parameters:** 
 - list (ArrayList *): a pointer to an ArrayList.
 
-**Returns:** a pointer to the removed element.
+**Returns:** the removed element.
 
 ##### Example
 
@@ -156,4 +158,39 @@ list->proto->push(ptr1);
 list->proto->push(ptr2);
 ArrayList *list2 = list->proto->clone(list);
 //list2 is composed from 2 pointers: ptr1 ptr2.
+```
+
+### get
+
+Returns the element at the given index. If index is out of the ArrayList boundaries NULL is returned.
+
+**Parameters:** 
+- list (ArrayList *): a pointer to an ArrayList.
+- index (size_t): the index of the element to retrieve.
+
+**Returns:** the data pointer at the given index or NULL.
+
+##### Example
+
+```c
+list->proto->get(list, 0);
+// retrives pointer at index 0.
+```
+
+### set
+
+Modifies the element at the given index. If index is out of the ArrayList boundaries, nothing happens. Set directly modifies the passed ArrayList.
+
+**Parameters:** 
+- list (ArrayList *): a pointer to an ArrayList.
+- index (size_t): the index of the element to retrieve.
+- value (void *): a data pointer to replace the target with.
+
+**Returns:** void.
+
+##### Example
+
+```c
+list->proto->set(list, 0, ptr);
+// changes value of the list at position 0 to ptr.
 ```

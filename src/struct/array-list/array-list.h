@@ -50,5 +50,7 @@ static ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size
 static ArrayList *ArrayListPush(ArrayList *list, void *value);
 static void *ArrayListPop(ArrayList *list);
 static ArrayList *ArrayListClone(ArrayList *list);
+static void *ArrayListGet(ArrayList *list, size_t index);
+static void ArrayListSet(ArrayList *list, size_t index, void *value);
 
 #endif
