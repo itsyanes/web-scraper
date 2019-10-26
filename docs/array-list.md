@@ -33,6 +33,10 @@ Methods of the prototype of ArrayList.
 1. [clone](#clone)
 1. [get](#get)
 1. [set](#set)
+1. [concat](#concat)
+1. [every](#every)
+1. [filter](#filter)
+1. [destroy](#destroy)
 
 ## Contents
 

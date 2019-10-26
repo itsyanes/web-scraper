@@ -22,6 +22,10 @@ ArrayListPrototype *getArrayListProto()
         proto->clone = &ArrayListClone;
         proto->get = &ArrayListGet;
         proto->set = &ArrayListSet;
+        proto->concat = &ArrayListConcat;
+        proto->every = &ArrayListEvery;
+        proto->filter = &ArrayListFilter;
+        proto->destroy = &ArrayListDestroy;
     }
     return proto;
 }
@@ -110,4 +114,59 @@ void ArrayListSet(ArrayList *list, size_t index, void *value)
     }
 
     list->_list[index] = value;
+}
+
+ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2)
+{
+    ArrayList *new = list->proto->clone(list);
+
+    for (int i = 0; i < list2->size; i++)
+    {
+        new->proto->push(new, list2->proto->get(list2, i));
+    }
+
+    return new;
+}
+
+bool ArrayListEvery(ArrayList *list, bool (*test)(void *element, size_t index))
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        if (!test(list->proto->get(list, i), i))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+ArrayList *ArrayListFilter(ArrayList *list, bool (*test)(void *element, size_t index))
+{
+    ArrayList *new = newArrayList();
+    for (int i = 0; i < list->size; i++)
+    {
+        if (test(list->proto->get(list, i), i))
+        {
+            new->proto->push(new, list->proto->get(list, i));
+        }
+    }
+    return new;
+}
+
+void ArrayListDestroy(ArrayList *list, void (*hook)(void *element))
+{
+    if (hook)
+    {
+        for (int i = 0; i < list->size; i++)
+        {
+            hook(list->proto->get(list, i));
+        }
+    }
+
+    if (ArrayListIsAllocated(list))
+    {
+        free(list->_list);
+    }
+
+    free(list);
 }
