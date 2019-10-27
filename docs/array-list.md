@@ -527,7 +527,7 @@ Sorts the element of an ArrayList. This function directly modifies the provided 
 ```c
 size_t sort(void *e)
 {
-  return *(int *)acc;
+  return *(int *)e;
 }
 
 int v = 5;
