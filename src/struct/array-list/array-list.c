@@ -31,6 +31,8 @@ ArrayListPrototype *getArrayListProto()
         proto->findIndex = &ArrayListFindIndex;
         proto->includes = &ArrayListIncludes;
         proto->indexOf = &ArrayListIndexOf;
+        proto->map = &ArrayListMap;
+        proto->reduce = &ArrayListReduce;
     }
     return proto;
 }
@@ -212,6 +214,28 @@ long ArrayListIndexOf(ArrayList *list, void *element)
         }
     }
     return -1;
+}
+
+ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t index))
+{
+    ArrayList *res = newArrayList();
+
+    for (int i = 0; i < list->size; i++)
+    {
+        res->proto->push(res, mapper(list->proto->get(list, i), i));
+    }
+
+    return res;
+}
+
+void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue)
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        initialValue = reducer(initialValue, list->proto->get(list, i));
+    }
+
+    return initialValue;
 }
 
 void ArrayListDestroy(ArrayList *list, void (*hook)(void *element))

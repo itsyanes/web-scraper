@@ -19,6 +19,24 @@ bool check(void *e, size_t i)
     return strcmp(e, "toto") == 0;
 }
 
+void *mapper(void *e, size_t i)
+{
+    char *new = malloc(10);
+    sprintf(new, "%s%s", (char *)e, "ta");
+    return new;
+}
+
+void *reducer(void *acc, void *e)
+{
+    *(int *)acc = *(int *)acc + *(int *)e;
+    return acc;
+}
+
+void hook(void *e)
+{
+    free(e);
+}
+
 int main(int argc, char **argv)
 {
     char *toto = "toto";
@@ -44,5 +62,21 @@ int main(int argc, char **argv)
     printf("index: %ld\n", list->proto->findIndex(list, check));
     list->proto->forEach(list, print);
     printf("includes: %d, indexOf: %ld\n", list->proto->includes(list, toto), list->proto->indexOf(list, titi));
+    l2 = list->proto->map(list, mapper);
+    debug(l2);
+    l2->proto->destroy(l2, hook);
+    int t = 3;
+    int u = 4;
+    int v = 5;
+    l2 = newArrayList();
+    l2->proto->push(l2, &t);
+    l2->proto->push(l2, &u);
+    l2->proto->push(l2, &v);
+    printf("length: %lu\n", l2->size);
+    printf("%d %d %d\n", (*(int *)l2->proto->get(list, 0)), (*(int *)l2->proto->get(list, 1)), (*(int *)l2->proto->get(list, 2)));
+    int *res = malloc(sizeof(int));
+    *res = 0;
+    //list->proto->reduce(list, reducer, res);
+    printf("%d\n", *res);
     return 0;
 }

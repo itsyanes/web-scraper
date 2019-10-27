@@ -61,5 +61,7 @@ static void ArrayListForEach(ArrayList *list, void (*callback)(void *element, si
 static void ArrayListDestroy(ArrayList *list, void (*hook)(void *element));
 static bool ArrayListIncludes(ArrayList *list, void *element);
 static long ArrayListIndexOf(ArrayList *list, void *element);
+static ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t index));
+static void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue);
 
 #endif
