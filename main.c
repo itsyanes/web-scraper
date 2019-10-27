@@ -43,5 +43,6 @@ int main(int argc, char **argv)
     puts(list->proto->find(list, check));
     printf("index: %ld\n", list->proto->findIndex(list, check));
     list->proto->forEach(list, print);
+    printf("includes: %d, indexOf: %ld\n", list->proto->includes(list, toto), list->proto->indexOf(list, titi));
     return 0;
 }

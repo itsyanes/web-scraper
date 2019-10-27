@@ -29,6 +29,8 @@ ArrayListPrototype *getArrayListProto()
         proto->forEach = &ArrayListForEach;
         proto->find = &ArrayListFind;
         proto->findIndex = &ArrayListFindIndex;
+        proto->includes = &ArrayListIncludes;
+        proto->indexOf = &ArrayListIndexOf;
     }
     return proto;
 }
@@ -186,6 +188,30 @@ void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t in
     {
         callback(list->proto->get(list, i), i);
     }
+}
+
+bool ArrayListIncludes(ArrayList *list, void *element)
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        if (list->proto->get(list, i) == element)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+long ArrayListIndexOf(ArrayList *list, void *element)
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        if (list->proto->get(list, i) == element)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
 void ArrayListDestroy(ArrayList *list, void (*hook)(void *element))

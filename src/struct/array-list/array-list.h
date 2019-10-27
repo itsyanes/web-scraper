@@ -59,5 +59,7 @@ static void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, siz
 static long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index));
 static void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index));
 static void ArrayListDestroy(ArrayList *list, void (*hook)(void *element));
+static bool ArrayListIncludes(ArrayList *list, void *element);
+static long ArrayListIndexOf(ArrayList *list, void *element);
 
 #endif
