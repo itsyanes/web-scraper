@@ -9,12 +9,9 @@ void debug(ArrayList *list)
     puts("---");
 }
 
-void debugInt(ArrayList *list)
+void print(void *e, size_t i)
 {
-    for (int i = 0; i < list->size; i++)
-    {
-        printf("%d\n", (*(int *)list->_list[i]));
-    }
+    puts(e);
 }
 
 bool check(void *e, size_t i)
@@ -43,5 +40,8 @@ int main(int argc, char **argv)
     l3 = list->proto->filter(list, check);
     debug(l3);
     l3->proto->destroy(l3, NULL);
+    puts(list->proto->find(list, check));
+    printf("index: %ld\n", list->proto->findIndex(list, check));
+    list->proto->forEach(list, print);
     return 0;
 }

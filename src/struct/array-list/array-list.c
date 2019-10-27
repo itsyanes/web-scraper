@@ -26,6 +26,9 @@ ArrayListPrototype *getArrayListProto()
         proto->every = &ArrayListEvery;
         proto->filter = &ArrayListFilter;
         proto->destroy = &ArrayListDestroy;
+        proto->forEach = &ArrayListForEach;
+        proto->find = &ArrayListFind;
+        proto->findIndex = &ArrayListFindIndex;
     }
     return proto;
 }
@@ -151,6 +154,38 @@ ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, siz
         }
     }
     return new;
+}
+
+void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index))
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        if (predicate(list->proto->get(list, i), i))
+        {
+            return list->proto->get(list, i);
+        }
+    }
+    return NULL;
+}
+
+long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index))
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        if (predicate(list->proto->get(list, i), i))
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index))
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        callback(list->proto->get(list, i), i);
+    }
 }
 
 void ArrayListDestroy(ArrayList *list, void (*hook)(void *element))

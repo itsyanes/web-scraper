@@ -55,6 +55,9 @@ static void ArrayListSet(ArrayList *list, size_t index, void *value);
 static ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2);
 static bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index));
 static ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index));
 static void ArrayListDestroy(ArrayList *list, void (*hook)(void *element));
 
 #endif
