@@ -128,11 +128,11 @@ ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2)
     return new;
 }
 
-bool ArrayListEvery(ArrayList *list, bool (*test)(void *element, size_t index))
+bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
     for (int i = 0; i < list->size; i++)
     {
-        if (!test(list->proto->get(list, i), i))
+        if (!predicate(list->proto->get(list, i), i))
         {
             return false;
         }
@@ -140,12 +140,12 @@ bool ArrayListEvery(ArrayList *list, bool (*test)(void *element, size_t index))
     return true;
 }
 
-ArrayList *ArrayListFilter(ArrayList *list, bool (*test)(void *element, size_t index))
+ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
     ArrayList *new = newArrayList();
     for (int i = 0; i < list->size; i++)
     {
-        if (test(list->proto->get(list, i), i))
+        if (predicate(list->proto->get(list, i), i))
         {
             new->proto->push(new, list->proto->get(list, i));
         }

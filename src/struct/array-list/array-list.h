@@ -19,17 +19,17 @@ struct ArrayListPrototype
     void *(*get)(ArrayList *list, size_t index);
     void (*set)(ArrayList *list, size_t index, void *value);
     ArrayList *(*concat)(ArrayList *list, ArrayList *list2);
-    bool (*every)(ArrayList *list, bool (*test)(void *element, size_t index));
-    ArrayList *(*filter)(ArrayList *list, bool (*test)(void *element, size_t index));
-    void *(*find)(ArrayList *list, bool (*test)(void *element, size_t index));
-    size_t (*findIndex)(ArrayList *list, bool (*test)(void *element, size_t index));
+    bool (*every)(ArrayList *list, bool (*predicate)(void *element, size_t index));
+    ArrayList *(*filter)(ArrayList *list, bool (*predicate)(void *element, size_t index));
+    void *(*find)(ArrayList *list, bool (*predicate)(void *element, size_t index));
+    long (*findIndex)(ArrayList *list, bool (*predicate)(void *element, size_t index));
     void (*forEach)(ArrayList *list, void (*callback)(void *element, size_t index));
     bool (*includes)(ArrayList *list, void *element);
-    size_t (*indexOf)(ArrayList *list, void *element);
-    ArrayList *(*map)(ArrayList *list, void *(*callback)(void *element, size_t index));
+    long (*indexOf)(ArrayList *list, void *element);
+    ArrayList *(*map)(ArrayList *list, void *(*mapper)(void *element, size_t index));
     void *(*reduce)(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue);
     ArrayList *(*slice)(ArrayList *list, size_t start, size_t end);
-    bool (*some)(ArrayList *list, bool (*test)(void *element, size_t index));
+    bool (*some)(ArrayList *list, bool (*predicate)(void *element, size_t index));
     ArrayList *(*sort)(ArrayList *list, size_t (*sortFunc)(void *element));
     void (*destroy)(ArrayList *list, void (*hook)(void *element));
 };
@@ -53,8 +53,8 @@ static ArrayList *ArrayListClone(ArrayList *list);
 static void *ArrayListGet(ArrayList *list, size_t index);
 static void ArrayListSet(ArrayList *list, size_t index, void *value);
 static ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2);
-static bool ArrayListEvery(ArrayList *list, bool (*test)(void *element, size_t index));
-static ArrayList *ArrayListFilter(ArrayList *list, bool (*test)(void *element, size_t index));
+static bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index));
 static void ArrayListDestroy(ArrayList *list, void (*hook)(void *element));
 
 #endif
