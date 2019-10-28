@@ -33,6 +33,9 @@ ArrayListPrototype *getArrayListProto()
         proto->indexOf = &ArrayListIndexOf;
         proto->map = &ArrayListMap;
         proto->reduce = &ArrayListReduce;
+        proto->slice = &ArrayListSlice;
+        proto->some = &ArrayListSome;
+        proto->sort = &ArrayListSort;
     }
     return proto;
 }
@@ -236,6 +239,33 @@ void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void 
     }
 
     return initialValue;
+}
+
+ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end)
+{
+    if (!ArrayListIsAllocated(list) || start > end || end > list->size)
+    {
+        return list;
+    }
+
+    ArrayList *new = newArrayList();
+
+    for (int i = start; i < end; i++)
+    {
+        new->proto->push(new, list->proto->get(list, i));
+    }
+
+    return new;
+}
+
+bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index))
+{
+    return true;
+}
+
+ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element))
+{
+    return list;
 }
 
 void ArrayListDestroy(ArrayList *list, void (*hook)(void *element))

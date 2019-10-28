@@ -78,4 +78,6 @@ void testList()
     *res = 0;
     l2->proto->reduce(l2, reducer, res);
     printf("%d\n", *res);
+    l3 = l2->proto->slice(l2, 0, 1);
+    printf("length :%lu-0:%d\n", l3->size, *(int *)l3->proto->get(l3, 0));
 }
