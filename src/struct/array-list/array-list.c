@@ -260,7 +260,14 @@ ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end)
 
 bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
-    return true;
+    for (int i = 0; i < list->size; i++)
+    {
+        if (predicate(list->proto->get(list, i), i))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element))

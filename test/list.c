@@ -19,6 +19,11 @@ bool check(void *e, size_t i)
     return strcmp(e, "toto") == 0;
 }
 
+bool check2(void *e, size_t i)
+{
+    return strcmp(e, "tata") == 0;
+}
+
 void *mapper(void *e, size_t i)
 {
     char *new = malloc(10);
@@ -80,4 +85,10 @@ void testList()
     printf("%d\n", *res);
     l3 = l2->proto->slice(l2, 0, 1);
     printf("length :%lu-0:%d\n", l3->size, *(int *)l3->proto->get(l3, 0));
+    list->proto->destroy(list, NULL);
+    list = newArrayList();
+    list->proto->push(list, toto);
+    list->proto->push(list, titi);
+    list->proto->push(list, titi);
+    printf("some:%d %d\n", list->proto->some(list, check), list->proto->some(list, check2));
 }
