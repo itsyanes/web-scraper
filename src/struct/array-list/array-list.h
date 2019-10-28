@@ -65,6 +65,7 @@ static ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, s
 static void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue);
 static ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end);
 static bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static void ArrayListSwap(ArrayList *list, size_t src, size_t dest);
 static ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element));
 
 #endif

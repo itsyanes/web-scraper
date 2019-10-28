@@ -60,7 +60,7 @@ ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end)
 
     ArrayList *new = list->proto->clone(list);
 
-    for (int i = start; i < end; i++)
+    for (size_t i = start; i < end; i++)
     {
         new->proto->set(new, i, value);
     }
@@ -98,7 +98,7 @@ ArrayList *ArrayListClone(ArrayList *list)
 {
     ArrayList *new = newArrayList();
 
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         new->proto->push(new, list->proto->get(list, i));
     }
@@ -130,7 +130,7 @@ ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2)
 {
     ArrayList *new = list->proto->clone(list);
 
-    for (int i = 0; i < list2->size; i++)
+    for (size_t i = 0; i < list2->size; i++)
     {
         new->proto->push(new, list2->proto->get(list2, i));
     }
@@ -140,7 +140,7 @@ ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2)
 
 bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         if (!predicate(list->proto->get(list, i), i))
         {
@@ -153,7 +153,7 @@ bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t ind
 ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
     ArrayList *new = newArrayList();
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         if (predicate(list->proto->get(list, i), i))
         {
@@ -165,7 +165,7 @@ ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, siz
 
 void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         if (predicate(list->proto->get(list, i), i))
         {
@@ -177,7 +177,7 @@ void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t ind
 
 long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         if (predicate(list->proto->get(list, i), i))
         {
@@ -189,7 +189,7 @@ long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t
 
 void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index))
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         callback(list->proto->get(list, i), i);
     }
@@ -197,7 +197,7 @@ void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t in
 
 bool ArrayListIncludes(ArrayList *list, void *element)
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         if (list->proto->get(list, i) == element)
         {
@@ -209,7 +209,7 @@ bool ArrayListIncludes(ArrayList *list, void *element)
 
 long ArrayListIndexOf(ArrayList *list, void *element)
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         if (list->proto->get(list, i) == element)
         {
@@ -223,7 +223,7 @@ ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t i
 {
     ArrayList *res = newArrayList();
 
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         res->proto->push(res, mapper(list->proto->get(list, i), i));
     }
@@ -233,7 +233,7 @@ ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t i
 
 void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue)
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         initialValue = reducer(initialValue, list->proto->get(list, i));
     }
@@ -250,7 +250,7 @@ ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end)
 
     ArrayList *new = newArrayList();
 
-    for (int i = start; i < end; i++)
+    for (size_t i = start; i < end; i++)
     {
         new->proto->push(new, list->proto->get(list, i));
     }
@@ -260,7 +260,7 @@ ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end)
 
 bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index))
 {
-    for (int i = 0; i < list->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
         if (predicate(list->proto->get(list, i), i))
         {
@@ -270,8 +270,28 @@ bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t inde
     return false;
 }
 
+void ArrayListSwap(ArrayList *list, size_t src, size_t dest)
+{
+    if (!ArrayListIsAllocated(list) || src > list->size || dest > list->size)
+    {
+        return;
+    }
+
+    void *temp = list->proto->get(list, dest);
+    list->proto->set(list, dest, list->proto->get(list, src));
+    list->proto->set(list, src, temp);
+}
+
 ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element))
 {
+    // for (size_t i = 0; i < list->size; i++)
+    // {
+    //     for (size_t j = 0; j < list->size; j++)
+    //     {
+    //         if (i != j && sortFunc(list->proto->get(list, i)))
+    //     }
+    // }
+    ArrayListSwap(list, 0 , 0);
     return list;
 }
 
@@ -279,7 +299,7 @@ void ArrayListDestroy(ArrayList *list, void (*hook)(void *element))
 {
     if (hook)
     {
-        for (int i = 0; i < list->size; i++)
+        for (size_t i = 0; i < list->size; i++)
         {
             hook(list->proto->get(list, i));
         }

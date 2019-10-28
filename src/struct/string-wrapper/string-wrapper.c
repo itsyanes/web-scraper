@@ -84,9 +84,9 @@ char StringCharAt(String *wrapper, size_t index)
     return wrapper->string[index];
 }
 
-int StringIndexOf(String *wrapper, char element)
+long StringIndexOf(String *wrapper, char element)
 {
-    for (int i = 0; i < wrapper->proto->length(wrapper); i++)
+    for (size_t i = 0; i < wrapper->proto->length(wrapper); i++)
     {
         if (wrapper->string[i] == element)
         {
@@ -96,10 +96,10 @@ int StringIndexOf(String *wrapper, char element)
     return -1;
 }
 
-int StringLastIndexOf(String *wrapper, char element)
+long StringLastIndexOf(String *wrapper, char element)
 {
-    int occurence = -1;
-    for (int i = 0; i < wrapper->proto->length(wrapper); i++)
+    long occurence = -1;
+    for (size_t i = 0; i < wrapper->proto->length(wrapper); i++)
     {
         if (wrapper->string[i] == element)
         {
@@ -198,7 +198,7 @@ String *StringReverse(String *wrapper)
 
     string newString = xmalloc(wrapper->proto->length(wrapper) + 1, sizeof(char));
 
-    for (int i = 0; i < wrapper->proto->length(wrapper); i++)
+    for (size_t i = 0; i < wrapper->proto->length(wrapper); i++)
     {
         newString[i] = wrapper->string[wrapper->proto->length(wrapper) - 1 - i];
     }
@@ -212,10 +212,10 @@ String *StringReverse(String *wrapper)
 
 String *StringTrim(String *wrapper)
 {
-    int start = 0;
-    int end = wrapper->proto->length(wrapper) - 1;
+    size_t start = 0;
+    size_t end = wrapper->proto->length(wrapper) - 1;
 
-    for (int i = 0; i < wrapper->proto->length(wrapper); i++)
+    for (size_t i = 0; i < wrapper->proto->length(wrapper); i++)
     {
         if (wrapper->string[i] > 33 && wrapper->string[i] < 127)
         {
@@ -224,7 +224,7 @@ String *StringTrim(String *wrapper)
         start++;
     }
 
-    for (int i = wrapper->proto->length(wrapper) - 1; i > 0; i--)
+    for (size_t i = wrapper->proto->length(wrapper) - 1; i > 0; i--)
     {
         if (wrapper->string[i] > 33 && wrapper->string[i] < 127)
         {
