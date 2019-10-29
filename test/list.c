@@ -9,6 +9,15 @@ void debug(ArrayList *list)
     puts("---");
 }
 
+void debugInt(ArrayList *list)
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        printf("%d\n", *(int *)list->_list[i]);
+    }
+    puts("---");
+}
+
 void print(void *e, size_t i)
 {
     puts(e);
@@ -22,6 +31,11 @@ bool check(void *e, size_t i)
 bool check2(void *e, size_t i)
 {
     return strcmp(e, "tata") == 0;
+}
+
+size_t sortFunc(void *e)
+{
+    return (size_t)*(int *)e;
 }
 
 void *mapper(void *e, size_t i)
@@ -73,12 +87,11 @@ void testList()
     int t = 3;
     int u = 4;
     int v = 5;
-    int *w = &t;
     l2 = newArrayList();
-    l2->proto->push(l2, w);
+    l2->proto->push(l2, &t);
     l2->proto->push(l2, &u);
     l2->proto->push(l2, &v);
-    printf("%d %d %d\n", (*(int *)l2->proto->get(l2, 0)), (*(int *)l2->proto->get(l2, 1)), (*(int *)l2->proto->get(l2, 2)));
+    debugInt(l2);
     int *res = malloc(sizeof(int));
     *res = 0;
     l2->proto->reduce(l2, reducer, res);
@@ -91,4 +104,10 @@ void testList()
     list->proto->push(list, titi);
     list->proto->push(list, titi);
     printf("some:%d %d\n", list->proto->some(list, check), list->proto->some(list, check2));
+    l2->proto->push(l2, &v);
+    l2->proto->push(l2, &u);
+    l2->proto->push(l2, &t);
+    debugInt(l2);
+    l2->proto->sort(l2, sortFunc);
+    debugInt(l2);
 }

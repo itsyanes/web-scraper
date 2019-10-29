@@ -272,7 +272,7 @@ bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t inde
 
 void ArrayListSwap(ArrayList *list, size_t src, size_t dest)
 {
-    if (!ArrayListIsAllocated(list) || src > list->size || dest > list->size)
+    if (!ArrayListIsAllocated(list) || src >= list->size || dest >= list->size)
     {
         return;
     }
@@ -284,14 +284,16 @@ void ArrayListSwap(ArrayList *list, size_t src, size_t dest)
 
 ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element))
 {
-    // for (size_t i = 0; i < list->size; i++)
-    // {
-    //     for (size_t j = 0; j < list->size; j++)
-    //     {
-    //         if (i != j && sortFunc(list->proto->get(list, i)))
-    //     }
-    // }
-    ArrayListSwap(list, 0 , 0);
+    for (size_t i = 0; i < list->size; i++)
+    {
+        for (size_t j = 0; j < list->size; j++)
+        {
+            if (j > i && sortFunc(list->proto->get(list, i)) > sortFunc(list->proto->get(list, j)))
+            {
+                ArrayListSwap(list, i, j);
+            }
+        }
+    }
     return list;
 }
 
