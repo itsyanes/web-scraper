@@ -40,6 +40,7 @@ StringPrototype *getStringProto()
         proto->slice = &StringSlice;
         proto->toString = &StringToString;
         proto->clone = &StringClone;
+        proto->search = &StringSearch;
     }
     return proto;
 }
@@ -283,6 +284,12 @@ String *StringClone(String *wrapper)
     }
 
     return wrapString(wrapper->string);
+}
+
+String *StringSearch(String *wrapper, string pattern)
+{
+    string occurence = strstr(wrapper->string, pattern);
+    return occurence ? wrapString(occurence) : newString();
 }
 
 void StringDestroy(String *wrapper)

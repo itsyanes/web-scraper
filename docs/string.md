@@ -170,7 +170,7 @@ char t = str->proto->charAt(str, 2);
 
 ### indexOf
 
-Returns the first occurence of the char given as a parameter in the string.
+Returns the first occurrence of the char given as a parameter in the string.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
@@ -188,7 +188,7 @@ str->proto->indexOf(str, 'o');
 
 ### lastIndexOf
 
-Returns the last occurence of the char given as a parameter in the string.
+Returns the last occurrence of the char given as a parameter in the string.
 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
@@ -284,7 +284,7 @@ Replaces all ocurrences of the first substring with the second substring in the 
 **Parameters:** 
 - wrapper (String *): a pointer to a String wrapper.
 - substr (string): the substring to look for in the String.
-- newSubstr (string): the substring to replace each occurence with.
+- newSubstr (string): the substring to replace each occurrence with.
 
 **Returns:** A pointer to the String.
 
@@ -387,4 +387,23 @@ String *str = wrapString("foobar");
 string st = str->proto->toString(str);
 puts(st);
 //prints "foobar"
+```
+
+### search
+
+Sends a new instance of String pointing to the first occurrence of the pattern in the passed String. Works in a similar fashion to C standard strstr function. Returns an empty String if there are no occurrences.
+
+**Parameters:** 
+- wrapper (String *): a pointer to a String wrapper.
+- pattern (string): the string to search for.
+
+**Returns:** a pointer to the new String pointing to the first occurrence or empty if there are no occurrences.
+
+##### Example
+
+```c
+String *str = wrapString("foobarfoobar");
+String *str2 = str->proto->search(str, "bar");
+puts(str2->string);
+//prints "barfoobar"
 ```

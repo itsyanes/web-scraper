@@ -3,6 +3,6 @@
 
 int main(int argc, char **argv)
 {
-    testList();
+    testString();
     return 0;
 }

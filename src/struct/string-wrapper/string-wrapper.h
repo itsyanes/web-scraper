@@ -33,7 +33,8 @@ struct StringPrototype
     String *(*slice)(String *wrapper, size_t start, size_t end);
     string (*toString)(String *wrapper);
     String *(*clone)(String *wrapper);
-    //ArrayList *(*split)(); -- wait ArrayList for implem
+    ArrayList *(*split)(String *wrapper, string separators);
+    String *(*search)(String *wrapper, string pattern);
 };
 
 String *newString();
@@ -55,6 +56,7 @@ static String *StringTrim(String *wrapper);
 static String *StringSlice(String *wrapper, size_t start, size_t end);
 static string StringToString(String *wrapper);
 static String *StringClone(String *wrapper);
+static String *StringSearch(String *wrapper, string pattern);
 static void StringDestroy(String *wrapper);
 
 #endif

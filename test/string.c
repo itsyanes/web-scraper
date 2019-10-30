@@ -1,7 +1,7 @@
 #include "struct/string-wrapper/string-wrapper.h"
 
 void testString()
-{    
+{
     String *wrapper3 = newString();
     String *wrapper = wrapper3->proto->clone(wrapper3);
     wrapper3->proto->destroy(wrapper3);
@@ -32,4 +32,9 @@ void testString()
     string str = wrapper->proto->toString(wrapper);
     puts(str);
     free(str);
+    wrapper = newString();
+    wrapper->proto->build(wrapper, "%s%s%s%d%s", "toto", " ", "is ", 12, " years old.");
+    puts(wrapper->string);
+    wrapper2 = wrapper->proto->search(wrapper, "12");
+    puts(wrapper2->string);
 }
