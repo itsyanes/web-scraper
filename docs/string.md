@@ -42,6 +42,9 @@ Methods of the prototype of String.
 1. [slice](#slice)
 1. [clone](#clone)
 1. [toString](#tostring)
+1. [search](#search)
+1. [split](#split)
+
 
 ## Contents
 
@@ -406,4 +409,22 @@ String *str = wrapString("foobarfoobar");
 String *str2 = str->proto->search(str, "bar");
 puts(str2->string);
 //prints "barfoobar"
+```
+
+### split
+
+Splits a String into multiple Strings each time a separator is encountered.
+
+**Parameters:** 
+- wrapper (String *): a pointer to a String wrapper.
+- separators (string): a string containing all the separators you wish to search for. Similar to standard C function strpbrk accept parameter.
+
+**Returns:** a pointer to an ArrayList containing all the splitted Strings.
+
+##### Example
+
+```c
+String *str = wrapString("foo|bar:foo|bar");
+ArrayList *list = str->proto->split(str, "|:");
+//list contains "foo", "bar", "foo", "bar".
 ```

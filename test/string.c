@@ -1,5 +1,17 @@
 #include "struct/string-wrapper/string-wrapper.h"
 
+static void printStr(void *e, size_t i)
+{
+    String *str = e;
+    puts(str->string);
+}
+
+static void freeStr(void *e)
+{
+    String *str = e;
+    str->proto->destroy(str);
+}
+
 void testString()
 {
     String *wrapper3 = newString();
@@ -37,4 +49,11 @@ void testString()
     puts(wrapper->string);
     wrapper2 = wrapper->proto->search(wrapper, "12");
     puts(wrapper2->string);
+    wrapper->proto->destroy(wrapper);
+    wrapper2->proto->destroy(wrapper2);
+    wrapper = wrapString(":toto:titi:tata:tyty!:");
+    ArrayList *list = wrapper->proto->split(wrapper, ":|;<");
+    list->proto->forEach(list, printStr);
+    printf("length: %lu--\n", list->size);
+    list->proto->destroy(list, freeStr);
 }

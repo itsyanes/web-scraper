@@ -57,6 +57,7 @@ static String *StringSlice(String *wrapper, size_t start, size_t end);
 static string StringToString(String *wrapper);
 static String *StringClone(String *wrapper);
 static String *StringSearch(String *wrapper, string pattern);
+static ArrayList *StringSplit(String *wrapper, string separators);
 static void StringDestroy(String *wrapper);
 
 #endif

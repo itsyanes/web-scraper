@@ -41,6 +41,7 @@ StringPrototype *getStringProto()
         proto->toString = &StringToString;
         proto->clone = &StringClone;
         proto->search = &StringSearch;
+        proto->split = &StringSplit;
     }
     return proto;
 }
@@ -290,6 +291,42 @@ String *StringSearch(String *wrapper, string pattern)
 {
     string occurence = strstr(wrapper->string, pattern);
     return occurence ? wrapString(occurence) : newString();
+}
+
+ArrayList *StringSplit(String *wrapper, string separators)
+{
+    ArrayList *list = newArrayList();
+    string head = wrapper->string;
+    string tail = wrapper->string;
+
+    while ((head = strpbrk(tail, separators)) != NULL)
+    {
+        string buffer = xmalloc(head - tail + 1, sizeof(char));
+
+        strncpy(buffer, tail, head - tail);
+        buffer[head - tail] = '\0';
+
+        if (strlen(buffer) > 0)
+        {
+            list->proto->push(list, wrapString(buffer));
+        }
+
+        free(buffer);
+
+        head++;
+        tail = head;
+    }
+
+    if (strlen(tail) > 0)
+    {
+        printf("%p %p\n", head, tail);
+        string buffer = xmalloc(strlen(tail) + 1, sizeof(char));
+        strcpy(buffer, tail);
+        list->proto->push(list, wrapString(buffer));
+        free(buffer);
+    }
+
+    return list;
 }
 
 void StringDestroy(String *wrapper)
