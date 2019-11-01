@@ -1,5 +1,30 @@
 #include "array-list.h"
 
+static ArrayListPrototype *getArrayListProto();
+static bool ArrayListIsAllocated(ArrayList *list);
+static void ArrayListExpand(ArrayList *list);
+static ArrayList *ArrayListFill(ArrayList *list, void *value, size_t start, size_t end);
+static ArrayList *ArrayListPush(ArrayList *list, void *value);
+static void *ArrayListPop(ArrayList *list);
+static ArrayList *ArrayListClone(ArrayList *list);
+static void *ArrayListGet(ArrayList *list, size_t index);
+static void ArrayListSet(ArrayList *list, size_t index, void *value);
+static ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2);
+static bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index));
+static void ArrayListDestroy(ArrayList *list, void (*hook)(void *element));
+static bool ArrayListIncludes(ArrayList *list, void *element);
+static long ArrayListIndexOf(ArrayList *list, void *element);
+static ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t index));
+static void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue);
+static ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end);
+static bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static void ArrayListSwap(ArrayList *list, size_t src, size_t dest);
+static ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element));
+
 ArrayList *newArrayList()
 {
     ArrayList *list = xmalloc(1, sizeof(ArrayList));

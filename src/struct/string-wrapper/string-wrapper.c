@@ -1,5 +1,26 @@
 #include "string-wrapper.h"
 
+static StringPrototype *getStringProto();
+static bool StringIsAllocated(String *wrapper);
+static size_t StringLength(String *wrapper);
+static String *StringBuild(String *wrapper, string format, ...);
+static char StringCharAt(String *wrapper, size_t index);
+static long StringIndexOf(String *wrapper, char element);
+static long StringLastIndexOf(String *wrapper, char element);
+static String *StringConcat(String *wrapper, string source);
+static bool StringStartsWith(String *wrapper, string comparator);
+static bool StringEndsWith(String *wrapper, string comparator);
+static bool StringIncludes(String *wrapper, string comparator);
+static String *StringReplace(String *wrapper, string substr, string newSubstr);
+static String *StringReverse(String *wrapper);
+static String *StringTrim(String *wrapper);
+static String *StringSlice(String *wrapper, size_t start, size_t end);
+static string StringToString(String *wrapper);
+static String *StringClone(String *wrapper);
+static String *StringSearch(String *wrapper, string pattern);
+static ArrayList *StringSplit(String *wrapper, string separators);
+static void StringDestroy(String *wrapper);
+
 String *newString()
 {
     String *wrapper = xmalloc(1, sizeof(String));
