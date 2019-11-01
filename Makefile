@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -O2 -I"src" -pedantic
+CFLAGS=-Wall -O2 -I"src" -pedantic -lcurl
 BIN=wscrap
 OBJ_PATH=obj
 BIN_PATH=bin
