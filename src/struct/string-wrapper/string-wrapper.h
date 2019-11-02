@@ -3,7 +3,7 @@
 #define STRING_WRAPPER_H
 
 #include "shared/shared.h"
-#include "utils/alloc/alloc.h"
+#include "utils/utils.h"
 #include "struct/array-list/array-list.h"
 
 typedef struct StringPrototype StringPrototype;

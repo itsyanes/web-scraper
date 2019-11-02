@@ -79,13 +79,9 @@ size_t StringLength(String *wrapper)
 
 String *StringBuild(String *wrapper, string format, ...)
 {
-    va_list args, copy;
+    va_list args;
     va_start(args, format);
-    va_copy(copy, args);
-    size_t size = vsnprintf(NULL, 0, format, args);
-    string buffer = xmalloc(size + 1, sizeof(char));
-    vsprintf(buffer, format, copy);
-    va_end(copy);
+    string buffer = VStringFromFormat(format, args);
     va_end(args);
 
     if (StringIsAllocated(wrapper))

@@ -4,5 +4,7 @@
 
 #include "./alloc/alloc.h"
 #include "./logger/logger.h"
+#include "./core/core.h"
+#include "./http/http.h"
 
 #endif
