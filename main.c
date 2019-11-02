@@ -10,6 +10,8 @@ int main(int argc, char **argv)
     CURL *curl;
     CURLcode res;
 
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+
     curl = curl_easy_init();
     if (curl)
     {
