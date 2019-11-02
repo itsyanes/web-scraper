@@ -7,10 +7,10 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
 
 int main(int argc, char **argv)
 {
+    init();
+
     CURL *curl;
     CURLcode res;
-
-    curl_global_init(CURL_GLOBAL_DEFAULT);
 
     curl = curl_easy_init();
     if (curl)
