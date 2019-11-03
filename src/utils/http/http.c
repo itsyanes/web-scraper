@@ -1,6 +1,6 @@
 #include "http.h"
 
-void fetch(string uri, size_t (*callback)(char *ptr, size_t size, size_t nmemb, void *userdata))
+void fetch(string uri, void *data, size_t (*callback)(char *ptr, size_t size, size_t nmemb, void *userdata))
 {
     CURL *curl = curl_easy_init();
 
@@ -13,6 +13,7 @@ void fetch(string uri, size_t (*callback)(char *ptr, size_t size, size_t nmemb, 
     {
         curl_easy_setopt(curl, CURLOPT_URL, uri);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, data);
 
         CURLcode res = curl_easy_perform(curl);
 
