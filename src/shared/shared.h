@@ -7,6 +7,9 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <curl/curl.h>
 
 typedef char *string;
