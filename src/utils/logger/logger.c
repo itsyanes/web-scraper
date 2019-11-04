@@ -2,6 +2,7 @@
 
 static void LoggerInfo(const char *message);
 static void LoggerError(const char *message);
+static void LoggerSysError(const char *message);
 
 Logger logger;
 
@@ -12,6 +13,7 @@ void initLogger()
     logger.level = LOGGER_DEFAULT_LEVEL;
     logger.info = &LoggerInfo;
     logger.error = &LoggerError;
+    logger.sysError = &LoggerSysError;
 }
 
 void setLogger(FILE *output, FILE *errOutput, LoggingLevel loggingLevel)
@@ -32,4 +34,10 @@ void LoggerInfo(const char *message)
 void LoggerError(const char *message)
 {
     fprintf(logger.errOutput, "[ERROR] %s\n", message);
+}
+
+void LoggerSysError(const char *message)
+{
+    fprintf(stderr, "[ERROR] ");
+    perror(message);
 }

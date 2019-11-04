@@ -6,6 +6,7 @@ void init()
 {
     curl_global_init(CURL_GLOBAL_DEFAULT);
     initLogger();
+    setLogger(stdout, stderr, LOGGER_ALL);
 }
 
 void loop()
