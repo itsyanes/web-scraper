@@ -15,6 +15,7 @@ struct Scraper
     u_int8_t maxDepth;
     string outputDir;
     void (*options)(Scraper *scraper, string uri, u_int8_t maxDepth, string outputDir);
+    void (*scrap)(Scraper *scraper);
 };
 
 Scraper *newScraper();

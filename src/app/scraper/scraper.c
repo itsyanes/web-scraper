@@ -1,6 +1,10 @@
 #include "scraper.h"
 
 static void ScraperChangeOptions(Scraper *scraper, string uri, u_int8_t maxDepth, string outputDir);
+static void ScraperScrap(Scraper *scraper);
+static size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata);
+static void ScraperCreateDirectory(string path);
+static string ScraperGetDomainName(string uri);
 
 Scraper *newScraper()
 {
@@ -9,6 +13,7 @@ Scraper *newScraper()
     scraper->maxDepth = 0;
     scraper->outputDir = stringFromFormat("%s", SCRAPER_DEFAULT_OUTPUT_DIR);
     scraper->options = &ScraperChangeOptions;
+    scraper->scrap = &ScraperScrap;
     return scraper;
 }
 
@@ -19,16 +24,16 @@ void ScraperChangeOptions(Scraper *scraper, string uri, u_int8_t maxDepth, strin
     scraper->outputDir = outputDir;
 }
 
-void scrap(Scraper *scraper)
+void ScraperScrap(Scraper *scraper)
 {
     String *basePath = newString();
     String *currentFilePath = newString();
-    string domainName = getDomainName(scraper->uri);
+    string domainName = ScraperGetDomainName(scraper->uri);
     basePath->proto->build(basePath, "%s/%s", scraper->outputDir, domainName);
-    createDirectory(basePath);
+    ScraperCreateDirectory(basePath->string);
     free(domainName);
-    currentFilePath->proto->build(currentFilePath, "%s/%s", basePath, "index.html");
-    fetch(scraper->uri, currentFilePath, writeFile);
+    currentFilePath->proto->build(currentFilePath, "%s/%s", basePath->string, "index.html");
+    fetch(scraper->uri, currentFilePath->string, ScraperWriteFile);
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
     {
     }
@@ -36,23 +41,23 @@ void scrap(Scraper *scraper)
     currentFilePath->proto->destroy(currentFilePath);
 }
 
-size_t writeFile(char *ptr, size_t size, size_t nmemb, void *userdata)
+size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
-    size_t size = 0;
+    size_t writtenBytes = 0;
     FILE *f = fopen((char *)userdata, "w");
     if (f)
     {
-        size = fputs(ptr, f);
+        writtenBytes = fprintf(f, "%s", ptr);
         fclose(f);
     }
     else
     {
         perror("[ERROR]");
     }
-    return size;
+    return writtenBytes;
 }
 
-void createDirectory(string path)
+void ScraperCreateDirectory(string path)
 {
     int status = mkdir(path, 0777);
     if (status)
@@ -61,8 +66,20 @@ void createDirectory(string path)
     }
 }
 
-string getDomainName(string uri)
+string ScraperGetDomainName(string uri)
 {
     String *wrapper = wrapString(uri);
-    return uri;
+
+    if (wrapper->proto->includes(wrapper, "//"))
+    {
+        String *tmp = wrapper->proto->search(wrapper, "//");
+        wrapper->proto->destroy(wrapper);
+        wrapper = tmp->proto->slice(tmp, 2, tmp->proto->length(tmp));
+        tmp->proto->destroy(tmp);
+    }
+
+    String *domain = wrapper->proto->slice(wrapper, 0, wrapper->proto->indexOf(wrapper, '/'));
+    wrapper->proto->destroy(wrapper);
+    string result = domain->proto->toString(domain);
+    return result;
 }
