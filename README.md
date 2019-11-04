@@ -28,7 +28,10 @@ docker build -t dev-env --force-rm .
 - Run the output binary in a container.
 
 ```bash
+// Linux
 docker run --rm -v ${PWD}/bin:/dev/test dev-env ./wscrap
+// Windows
+docker run --rm -v ${PWD}/bin:/dev/test -e PWD=/dev/test dev-env ./wscrap
 ```
 
 ## Documentation
