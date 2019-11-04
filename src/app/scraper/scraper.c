@@ -5,6 +5,7 @@ static void ScraperScrap(Scraper *scraper);
 static size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata);
 static void ScraperCreateDirectory(string path);
 static string ScraperGetDomainName(string uri);
+static void ScraperDestroy(Scraper *scraper);
 
 Scraper *newScraper()
 {
@@ -14,6 +15,7 @@ Scraper *newScraper()
     scraper->outputDir = stringFromFormat("%s", SCRAPER_DEFAULT_OUTPUT_DIR);
     scraper->options = &ScraperChangeOptions;
     scraper->scrap = &ScraperScrap;
+    scraper->destroy = &ScraperDestroy;
     return scraper;
 }
 
@@ -82,4 +84,11 @@ string ScraperGetDomainName(string uri)
     wrapper->proto->destroy(wrapper);
     string result = domain->proto->toString(domain);
     return result;
+}
+
+void ScraperDestroy(Scraper *scraper)
+{
+    free(scraper->uri);
+    free(scraper->outputDir);
+    free(scraper);
 }
