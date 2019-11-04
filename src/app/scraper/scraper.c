@@ -32,8 +32,8 @@ void ScraperScrap(Scraper *scraper)
     basePath->proto->build(basePath, "%s/%s", scraper->outputDir, domainName);
     ScraperCreateDirectory(basePath->string);
     free(domainName);
-    currentFilePath->proto->build(currentFilePath, "%s/%s", basePath->string, "index.html");
-    fetch(scraper->uri, currentFilePath->string, ScraperWriteFile);
+    currentFilePath->proto->build(currentFilePath, "%s/%s", basePath->string, SCRAPER_INDEX_NAME);
+    fetch(scraper->uri, SCRAPER_INDEX_NAME, currentFilePath->string, ScraperWriteFile);
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
     {
     }
@@ -52,7 +52,7 @@ size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata)
     }
     else
     {
-        perror("[ERROR]");
+        logger.sysError((char *)userdata);
     }
     return writtenBytes;
 }
@@ -62,7 +62,7 @@ void ScraperCreateDirectory(string path)
     int status = mkdir(path, 0777);
     if (status)
     {
-        perror("[ERROR]");
+        logger.sysError(path);
     }
 }
 
