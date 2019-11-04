@@ -5,6 +5,7 @@
 #include "shared/shared.h"
 #include "utils/utils.h"
 #include "app/scraper/scraper.h"
+#include "app/task/task.h"
 
 void init();
 void loop();
