@@ -45,7 +45,7 @@ void ScraperScrap(Scraper *scraper)
 size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
     size_t writtenBytes = 0;
-    FILE *f = fopen((char *)userdata, "w");
+    FILE *f = fopen((char *)userdata, "a");
     if (f)
     {
         writtenBytes = fprintf(f, "%s", ptr);
