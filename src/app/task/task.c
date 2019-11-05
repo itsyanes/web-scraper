@@ -30,6 +30,7 @@ void TaskStart(Task *task)
 
     if (pid == PROCESS_CREATION_FAILED)
     {
+        TaskDestroy(task);
         return;
     }
 
