@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -O3 -I"src" -pedantic
-LDFLAGS=-lcurl
+LDFLAGS=-lcurl -lm
 BIN=wscrap
 OBJ_PATH=obj
 BIN_PATH=bin
