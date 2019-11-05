@@ -4,6 +4,7 @@
 
 #include "shared/shared.h"
 #include "struct/struct.h"
+#include "utils/utils.h"
 
 #define SCRAPER_DEFAULT_URI "https://example.com"
 #define SCRAPER_DEFAULT_OUTPUT_DIR getenv("PWD")

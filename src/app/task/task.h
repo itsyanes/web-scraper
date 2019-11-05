@@ -4,6 +4,8 @@
 
 #include "shared/shared.h"
 #include "utils/utils.h"
+#include "struct/struct.h"
+#include "app/app.h"
 
 #define PROCESS_CREATION_FAILED -1
 #define SIGKILL 9

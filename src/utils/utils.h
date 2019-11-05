@@ -6,5 +6,6 @@
 #include "./logger/logger.h"
 #include "./core/core.h"
 #include "./http/http.h"
+#include "./file/file.h"
 
 #endif
