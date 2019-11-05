@@ -1,6 +1,10 @@
 #include "http.h"
 
-void fetch(string uri, char *resourceName, void *data, size_t (*callback)(char *ptr, size_t size, size_t nmemb, void *userdata))
+void fetch(string uri,
+           char *resourceName,
+           void *data,
+           size_t (*callback)(char *ptr, size_t size, size_t nmemb, void *userdata),
+           size_t (*headerCallback)(char *ptr, size_t size, size_t nmemb, void *userdata))
 {
     CURL *curl = curl_easy_init();
 
@@ -14,6 +18,11 @@ void fetch(string uri, char *resourceName, void *data, size_t (*callback)(char *
         curl_easy_setopt(curl, CURLOPT_URL, uri);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, data);
+
+        if (headerCallback)
+        {
+            curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, headerCallback);
+        }
 
         string message = stringFromFormat("Downloading %s...", resourceName);
         logger.info(message);

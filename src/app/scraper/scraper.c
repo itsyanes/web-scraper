@@ -34,7 +34,7 @@ void ScraperScrap(Scraper *scraper)
     createDirectory(basePath->string);
     free(domainName);
     currentFilePath->proto->build(currentFilePath, "%s/%s", basePath->string, SCRAPER_INDEX_NAME);
-    fetch(scraper->uri, SCRAPER_INDEX_NAME, currentFilePath->string, ScraperWriteFile);
+    fetch(scraper->uri, SCRAPER_INDEX_NAME, currentFilePath->string, ScraperWriteFile, NULL);
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
     {
     }
