@@ -2,12 +2,13 @@
 
 static u_int32_t MapHash(const u_int8_t *key, size_t length);
 static void MapResize(Map *map);
-static ArrayList *MapGetBucket(Map *map, char *key);
+static ArrayList *MapGetBucket(Map *map, string key);
 static bool MapSizeExceedsLoadFactor(Map *map);
-static void *MapSet(Map *map, char *key, void *value);
-static void *MapGet(Map *map, char *key);
-static bool MapHas(Map *map, char *key);
+static void *MapSet(Map *map, string key, void *value);
+static void *MapGet(Map *map, string key);
+static bool MapHas(Map *map, string key);
 static MapPrototype *getMapProto();
+static KeyValuePair *MapFindKeyValuePairInList(ArrayList *list, string key);
 
 Map *newMap()
 {
@@ -36,21 +37,14 @@ MapPrototype *getMapProto()
     return proto;
 }
 
-void *MapGet(Map *map, char *key)
+void *MapGet(Map *map, string key)
 {
     ArrayList *l = MapGetBucket(map, key);
-    for (size_t i = 0; i < l->size; i++)
-    {
-        KeyValuePair *kv = l->proto->get(l, i);
-        if (strlen(kv->key) == strlen(key) && memcmp(kv->key, key, strlen(key)))
-        {
-            return kv->value;
-        }
-    }
-    return NULL;
+    KeyValuePair *kv = MapFindKeyValuePairInList(l, key);
+    return kv ? kv->value : NULL;
 }
 
-void *MapSet(Map *map, char *key, void *value)
+void *MapSet(Map *map, string key, void *value)
 {
     if (MapSizeExceedsLoadFactor(map))
     {
@@ -58,22 +52,17 @@ void *MapSet(Map *map, char *key, void *value)
     }
 
     ArrayList *l = MapGetBucket(map, key);
+    KeyValuePair *kv = MapFindKeyValuePairInList(l, key);
 
-    if (map->proto->has(map, key))
+    if (kv)
     {
-        for (size_t i = 0; i < l->size; i++)
-        {
-            KeyValuePair *kv = l->proto->get(l, i);
-            if (strlen(kv->key) == strlen(key) && memcmp(kv->key, key, strlen(key)))
-            {
-                void *temp = kv->value;
-                kv->value = value;
-                return temp;
-            }
-        }
+        printf("Map already has %s key!\n", key);
+        void *temp = kv->value;
+        kv->value = value;
+        return temp;
     }
 
-    KeyValuePair *kv = xmalloc(1, sizeof(KeyValuePair));
+    kv = xmalloc(1, sizeof(KeyValuePair));
     kv->key = key;
     kv->value = value;
     l->proto->push(l, kv);
@@ -81,18 +70,24 @@ void *MapSet(Map *map, char *key, void *value)
     return NULL;
 }
 
-bool MapHas(Map *map, char *key)
+KeyValuePair *MapFindKeyValuePairInList(ArrayList *list, string key)
 {
-    ArrayList *l = MapGetBucket(map, key);
-    for (size_t i = 0; i < l->size; i++)
+    for (size_t i = 0; i < list->size; i++)
     {
-        KeyValuePair *kv = l->proto->get(l, i);
-        if (strlen(kv->key) == strlen(key) && memcmp(kv->key, key, strlen(key)))
+        KeyValuePair *kv = list->proto->get(list, i);
+        if (strlen(kv->key) == strlen(key) && memcmp(kv->key, key, strlen(key)) == 0)
         {
-            return true;
+            return kv;
         }
     }
-    return false;
+    return NULL;
+}
+
+bool MapHas(Map *map, string key)
+{
+    ArrayList *l = MapGetBucket(map, key);
+    KeyValuePair *kv = MapFindKeyValuePairInList(l, key);
+    return kv ? true : false;
 }
 
 bool MapSizeExceedsLoadFactor(Map *map)
@@ -100,7 +95,7 @@ bool MapSizeExceedsLoadFactor(Map *map)
     return (double)(map->size + 1) / MAP_GETSIZE(map->_capacityExp) > MAP_LOAD_FACTOR;
 }
 
-ArrayList *MapGetBucket(Map *map, char *key)
+ArrayList *MapGetBucket(Map *map, string key)
 {
     u_int32_t hash = MapHash((u_int8_t *)key, strlen(key));
     return map->_buckets[hash % MAP_GETSIZE(map->_capacityExp)];

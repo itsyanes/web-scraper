@@ -13,7 +13,7 @@
 typedef struct KeyValuePair KeyValuePair;
 struct KeyValuePair
 {
-    char *key;
+    string key;
     void *value;
 };
 
@@ -22,13 +22,13 @@ typedef struct MapPrototype MapPrototype;
 
 struct MapPrototype
 {
-    void *(*get)(Map *map, char *key);
-    void *(*set)(Map *map, char *key, void *value);
-    bool (*has)(Map *map, char *key);
-    void (*forEach)(Map *map, void (*callback)(char *key, void *value));
+    void *(*get)(Map *map, string key);
+    void *(*set)(Map *map, string key, void *value);
+    bool (*has)(Map *map, string key);
+    void (*forEach)(Map *map, void (*callback)(string key, void *value));
     void (*clear)(Map *map);
-    bool (*delete)(Map *map, char *key);
-    void (*destroy)(Map *map, void (*hook)(char *key, void *value));
+    bool (*delete)(Map *map, string key);
+    void (*destroy)(Map *map, void (*hook)(string key, void *value));
 };
 
 struct Map
