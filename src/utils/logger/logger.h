@@ -17,9 +17,9 @@ struct Logger
     FILE *output;
     FILE *errOutput;
     LoggingLevel level;
-    void (*info)(const char *message);
-    void (*error)(const char *message);
-    void (*sysError)(const char *message);
+    void (*info)(const string message);
+    void (*error)(const string message);
+    void (*sysError)(const string message);
 };
 typedef struct Logger Logger;
 

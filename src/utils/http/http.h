@@ -6,9 +6,9 @@
 #include "utils/utils.h"
 
 void fetch(string uri,
-           char *resourceName,
+           string resourceName,
            void *data,
-           size_t (*callback)(char *ptr, size_t size, size_t nmemb, void *userdata),
-           size_t (*headerCallback)(char *ptr, size_t size, size_t nmemb, void *userdata));
+           size_t (*callback)(string ptr, size_t size, size_t nmemb, void *userdata),
+           size_t (*headerCallback)(string ptr, size_t size, size_t nmemb, void *userdata));
 
 #endif

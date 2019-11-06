@@ -2,7 +2,7 @@
 
 static void ScraperChangeOptions(Scraper *scraper, string uri, u_int8_t maxDepth, string outputDir);
 static void ScraperScrap(Scraper *scraper);
-static size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata);
+static size_t ScraperWriteFile(string ptr, size_t size, size_t nmemb, void *userdata);
 static string ScraperGetDomainName(string uri);
 static void ScraperDestroy(Scraper *scraper);
 
@@ -42,10 +42,10 @@ void ScraperScrap(Scraper *scraper)
     currentFilePath->proto->destroy(currentFilePath);
 }
 
-size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata)
+size_t ScraperWriteFile(string ptr, size_t size, size_t nmemb, void *userdata)
 {
     size_t writtenBytes = 0;
-    FILE *f = fopen((char *)userdata, "a");
+    FILE *f = fopen((string)userdata, "a");
     if (f)
     {
         writtenBytes = fprintf(f, "%s", ptr);
@@ -53,7 +53,7 @@ size_t ScraperWriteFile(char *ptr, size_t size, size_t nmemb, void *userdata)
     }
     else
     {
-        logger.sysError((char *)userdata);
+        logger.sysError((string)userdata);
     }
     return writtenBytes;
 }

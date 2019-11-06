@@ -1,8 +1,8 @@
 #include "logger.h"
 
-static void LoggerInfo(const char *message);
-static void LoggerError(const char *message);
-static void LoggerSysError(const char *message);
+static void LoggerInfo(const string message);
+static void LoggerError(const string message);
+static void LoggerSysError(const string message);
 
 Logger logger;
 
@@ -23,7 +23,7 @@ void setLogger(FILE *output, FILE *errOutput, LoggingLevel loggingLevel)
     logger.level = loggingLevel;
 }
 
-void LoggerInfo(const char *message)
+void LoggerInfo(const string message)
 {
     if (logger.level == LOGGER_ALL)
     {
@@ -31,12 +31,12 @@ void LoggerInfo(const char *message)
     }
 }
 
-void LoggerError(const char *message)
+void LoggerError(const string message)
 {
     fprintf(logger.errOutput, "[ERROR] %s\n", message);
 }
 
-void LoggerSysError(const char *message)
+void LoggerSysError(const string message)
 {
     fprintf(stderr, "[ERROR] ");
     perror(message);
