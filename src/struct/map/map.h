@@ -26,8 +26,8 @@ struct MapPrototype
     void *(*set)(Map *map, string key, void *value);
     bool (*has)(Map *map, string key);
     void (*forEach)(Map *map, void (*callback)(string key, void *value));
-    void (*clear)(Map *map);
-    bool (*delete)(Map *map, string key);
+    void (*clear)(Map *map, void (*hook)(string key, void *value));
+    bool (*delete)(Map *map, string key, void (*hook)(string key, void *value));
     void (*destroy)(Map *map, void (*hook)(string key, void *value));
 };
 

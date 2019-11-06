@@ -9,6 +9,7 @@ static void *MapGet(Map *map, string key);
 static bool MapHas(Map *map, string key);
 static MapPrototype *getMapProto();
 static KeyValuePair *MapFindKeyValuePairInList(ArrayList *list, string key);
+static void MapForEach(Map *map, void (*callback)(string key, void *value));
 
 Map *newMap()
 {
@@ -33,6 +34,7 @@ MapPrototype *getMapProto()
         proto->set = &MapSet;
         proto->get = &MapGet;
         proto->has = &MapHas;
+        proto->forEach = &MapForEach;
     }
     return proto;
 }
@@ -56,7 +58,6 @@ void *MapSet(Map *map, string key, void *value)
 
     if (kv)
     {
-        printf("Map already has %s key!\n", key);
         void *temp = kv->value;
         kv->value = value;
         return temp;
@@ -68,6 +69,19 @@ void *MapSet(Map *map, string key, void *value)
     l->proto->push(l, kv);
     map->size++;
     return NULL;
+}
+
+void MapForEach(Map *map, void (*callback)(string key, void *value))
+{
+    for (size_t i = 0; i < MAP_GETSIZE(map->_capacityExp); i++)
+    {
+        ArrayList *current = map->_buckets[i];
+        for (size_t j = 0; j < current->size; j++)
+        {
+            KeyValuePair *kv = current->proto->get(current, j);
+            callback(kv->key, kv->value);
+        }
+    }
 }
 
 KeyValuePair *MapFindKeyValuePairInList(ArrayList *list, string key)
