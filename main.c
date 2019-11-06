@@ -16,5 +16,7 @@ int main(int argc, char **argv)
     m->proto->clear(m, NULL);
     printf("%lu\n", m->size);
     m->proto->forEach(m, print);
+    m->proto->destroy(m, NULL);
+    printf("map destroyed\n");
     return 0;
 }

@@ -14,6 +14,7 @@ static bool MapDelete(Map *map, string key, void (*hook)(string key, void *value
 static void MapFree(KeyValuePair *kv, void (*hook)(string key, void *value));
 static void MapClear(Map *map, void (*hook)(string key, void *value));
 static size_t MapGetBucketIndex(Map *map, string key);
+static void MapDestroy(Map *map, void (*hook)(string key, void *value));
 
 Map *newMap()
 {
@@ -41,6 +42,7 @@ MapPrototype *getMapProto()
         proto->forEach = &MapForEach;
         proto->delete = &MapDelete;
         proto->clear = &MapClear;
+        proto->destroy = &MapDestroy;
     }
     return proto;
 }
@@ -215,4 +217,20 @@ void MapClear(Map *map, void (*hook)(string key, void *value))
         current = newArrayList();
     }
     map->size = 0;
+}
+
+void MapDestroy(Map *map, void (*hook)(string key, void *value))
+{
+    for (size_t i = 0; i < MAP_GETSIZE(map->_capacityExp); i++)
+    {
+        ArrayList *current = map->_buckets[i];
+        for (size_t j = 0; j < current->size; j++)
+        {
+            KeyValuePair *kv = current->proto->get(current, j);
+            MapFree(kv, hook);
+        }
+        current->proto->destroy(current, NULL);
+    }
+    free(map->_buckets);
+    free(map);
 }
