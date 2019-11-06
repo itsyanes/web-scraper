@@ -10,6 +10,10 @@ static bool MapHas(Map *map, string key);
 static MapPrototype *getMapProto();
 static KeyValuePair *MapFindKeyValuePairInList(ArrayList *list, string key);
 static void MapForEach(Map *map, void (*callback)(string key, void *value));
+static bool MapDelete(Map *map, string key, void (*hook)(string key, void *value));
+static void MapFree(KeyValuePair *kv, void (*hook)(string key, void *value));
+static void MapClear(Map *map, void (*hook)(string key, void *value));
+static size_t MapGetBucketIndex(Map *map, string key);
 
 Map *newMap()
 {
@@ -35,6 +39,8 @@ MapPrototype *getMapProto()
         proto->get = &MapGet;
         proto->has = &MapHas;
         proto->forEach = &MapForEach;
+        proto->delete = &MapDelete;
+        proto->clear = &MapClear;
     }
     return proto;
 }
@@ -111,8 +117,13 @@ bool MapSizeExceedsLoadFactor(Map *map)
 
 ArrayList *MapGetBucket(Map *map, string key)
 {
+    return map->_buckets[MapGetBucketIndex(map, key)];
+}
+
+size_t MapGetBucketIndex(Map *map, string key)
+{
     u_int32_t hash = MapHash((u_int8_t *)key, strlen(key));
-    return map->_buckets[hash % MAP_GETSIZE(map->_capacityExp)];
+    return hash % MAP_GETSIZE(map->_capacityExp);
 }
 
 void MapResize(Map *map)
@@ -150,4 +161,58 @@ u_int32_t MapHash(const u_int8_t *key, size_t length)
     hash ^= hash >> 11;
     hash += hash << 15;
     return hash;
+}
+
+bool MapDelete(Map *map, string key, void (*hook)(string key, void *value))
+{
+    ArrayList *l = MapGetBucket(map, key);
+    KeyValuePair *kv = MapFindKeyValuePairInList(l, key);
+
+    if (!kv)
+    {
+        return false;
+    }
+
+    size_t index = l->proto->indexOf(l, kv);
+
+    MapFree(kv, hook);
+
+    ArrayList *new = newArrayList();
+    for (size_t i = 0; i < l->size; i++)
+    {
+        if (i != index)
+        {
+            new->proto->push(new, l->proto->get(l, i));
+        }
+    }
+
+    l->proto->destroy(l, NULL);
+    map->_buckets[MapGetBucketIndex(map, key)] = new;
+    map->size--;
+    return true;
+}
+
+void MapFree(KeyValuePair *kv, void (*hook)(string key, void *value))
+{
+    if (hook)
+    {
+        hook(kv->key, kv->value);
+    }
+    free(kv);
+}
+
+void MapClear(Map *map, void (*hook)(string key, void *value))
+{
+    for (size_t i = 0; i < MAP_GETSIZE(map->_capacityExp); i++)
+    {
+        ArrayList *current = map->_buckets[i];
+        for (size_t j = 0; j < current->size; j++)
+        {
+            KeyValuePair *kv = current->proto->get(current, j);
+            MapFree(kv, hook);
+        }
+        current->proto->destroy(current, NULL);
+        current = newArrayList();
+    }
+    map->size = 0;
 }

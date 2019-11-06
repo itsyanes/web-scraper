@@ -13,6 +13,8 @@ int main(int argc, char **argv)
     m->proto->set(m, "titi", "toto");
     m->proto->set(m, "tata", "tutu");
     m->proto->set(m, "tutu", "tata");
+    m->proto->clear(m, NULL);
+    printf("%lu\n", m->size);
     m->proto->forEach(m, print);
     return 0;
 }
