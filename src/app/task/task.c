@@ -45,6 +45,8 @@ void TaskStart(Task *task)
         task->scrapers->proto->forEach(task->scrapers, TaskStartScrap);
         TaskSleep(task);
     }
+
+    exit(0);
 }
 
 void TaskStartScrap(void *element, size_t index)

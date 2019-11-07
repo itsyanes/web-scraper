@@ -21,6 +21,7 @@ void loop()
     t->start(t);
     int status;
     wait(&status);
+    t->stop(t);
 }
 
 // ArrayList *getTasks()

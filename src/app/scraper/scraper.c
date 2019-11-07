@@ -20,9 +20,11 @@ Scraper *newScraper()
 
 void ScraperChangeOptions(Scraper *scraper, string uri, u_int8_t maxDepth, string outputDir)
 {
-    scraper->uri = uri;
+    free(scraper->uri);
+    free(scraper->outputDir);
+    scraper->uri = stringFromFormat("%s", uri);
     scraper->maxDepth = maxDepth;
-    scraper->outputDir = outputDir;
+    scraper->outputDir = stringFromFormat("%s", outputDir);
 }
 
 void ScraperScrap(Scraper *scraper)

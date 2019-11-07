@@ -6,17 +6,7 @@ void print(string key, void *value) {
 
 int main(int argc, char **argv)
 {
-    //init();
-    // loop();
-    Map *m = newMap();
-    m->proto->set(m, "toto", "titi");
-    m->proto->set(m, "titi", "toto");
-    m->proto->set(m, "tata", "tutu");
-    m->proto->set(m, "tutu", "tata");
-    m->proto->clear(m, NULL);
-    printf("%lu\n", m->size);
-    m->proto->forEach(m, print);
-    m->proto->destroy(m, NULL);
-    printf("map destroyed\n");
+    init();
+    loop();
     return 0;
 }
