@@ -6,7 +6,7 @@ void print(string key, void *value) {
 
 int main(int argc, char **argv)
 {
-    init();
+    //init();
     // loop();
     Map *m = newMap();
     m->proto->set(m, "toto", "titi");

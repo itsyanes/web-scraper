@@ -214,7 +214,7 @@ void MapClear(Map *map, void (*hook)(string key, void *value))
             MapFree(kv, hook);
         }
         current->proto->destroy(current, NULL);
-        current = newArrayList();
+        map->_buckets[i] = newArrayList();
     }
     map->size = 0;
 }
