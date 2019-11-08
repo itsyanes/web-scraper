@@ -1,10 +1,9 @@
 #include "http.h"
 
-void fetch(string uri,
-           string resourceName,
-           void *data,
-           size_t (*callback)(string ptr, size_t size, size_t nmemb, void *userdata),
-           size_t (*headerCallback)(string ptr, size_t size, size_t nmemb, void *userdata))
+static size_t HttpWriteFile(string ptr, size_t size, size_t nmemb, void *userdata);
+static size_t HttpGetHeaders(string ptr, size_t size, size_t nmemb, void *headerData);
+
+void downloadFile(string uri, string resourceName, string outputDir, Map *headers)
 {
     CURL *curl = curl_easy_init();
 
@@ -15,14 +14,14 @@ void fetch(string uri,
 
     if (curl)
     {
-        curl_easy_setopt(curl, CURLOPT_URL, uri);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, data);
+        Buffer *bodyBuffer = newBuffer();
+        Buffer *headersBuffer = newBuffer();
 
-        if (headerCallback)
-        {
-            curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, headerCallback);
-        }
+        curl_easy_setopt(curl, CURLOPT_URL, uri);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, HttpFillBuffer);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, bodyBuffer);
+        curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, HttpFillBuffer);
+        curl_easy_setopt(curl, CURLOPT_HEADERDATA, headersBuffer);
 
         string message = stringFromFormat("Downloading %s...", resourceName);
         logger.info(message);
@@ -46,4 +45,31 @@ void fetch(string uri,
 
         curl_easy_cleanup(curl);
     }
+}
+
+size_t HttpFillBuffer(string ptr, size_t size, size_t nmemb, void *dataBuffer)
+{
+    Buffer *b = dataBuffer;
+    b->proto->append(b, ptr, size * nmemb);
+    return size * nmemb;
+}
+
+size_t HttpGetHeaders(string ptr, size_t size, size_t nmemb, void *headerData)
+{
+}
+
+size_t HttpWriteFile(string ptr, size_t size, size_t nmemb, void *userdata)
+{
+    size_t writtenBytes = 0;
+    FILE *f = fopen((string)userdata, "a");
+    if (f)
+    {
+        writtenBytes = fprintf(f, "%s", ptr);
+        fclose(f);
+    }
+    else
+    {
+        logger.sysError((string)userdata);
+    }
+    return writtenBytes;
 }

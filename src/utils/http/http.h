@@ -4,11 +4,8 @@
 
 #include "shared/shared.h"
 #include "utils/utils.h"
+#include "struct/struct.h"
 
-void fetch(string uri,
-           string resourceName,
-           void *data,
-           size_t (*callback)(string ptr, size_t size, size_t nmemb, void *userdata),
-           size_t (*headerCallback)(string ptr, size_t size, size_t nmemb, void *userdata));
+void downloadFile(string uri, string resourceName, string outputDir, Map *headers);
 
 #endif
