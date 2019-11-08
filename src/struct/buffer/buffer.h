@@ -3,11 +3,10 @@
 #define BUFFER_H
 
 #include "shared/shared.h"
-#include "utils/utils.h"
+#include "utils/alloc/alloc.h"
 
 typedef struct Buffer Buffer;
 typedef struct BufferPrototype BufferPrototype;
-typedef char byte;
 
 struct BufferPrototype
 {

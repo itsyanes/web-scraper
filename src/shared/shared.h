@@ -17,7 +17,7 @@
 #include <curl/curl.h>
 
 typedef char *string;
-
+typedef char byte;
 typedef unsigned long size_t;
 
 #endif

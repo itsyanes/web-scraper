@@ -37,3 +37,11 @@ string VStringFromFormat(const string format, va_list args)
     va_end(copy);
     return destination;
 }
+
+string Stringify(byte *data, size_t bytes)
+{
+    string new = xmalloc(bytes + 1, 1);
+    memcpy(new, data, bytes);
+    new[bytes + 1] = '\0';
+    return new;
+}
