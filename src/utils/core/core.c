@@ -42,6 +42,6 @@ string Stringify(byte *data, size_t bytes)
 {
     string new = xmalloc(bytes + 1, 1);
     memcpy(new, data, bytes);
-    new[bytes + 1] = '\0';
+    new[bytes] = '\0';
     return new;
 }
