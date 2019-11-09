@@ -10,6 +10,11 @@ void init()
     setLogger(stdout, stderr, LOGGER_ALL);
 }
 
+void MapHook(string key, void *value) {
+    free(key);
+    free(value);
+}
+
 void loop()
 {
     // ArrayList *tasks = getTasks();
@@ -25,6 +30,15 @@ void loop()
     Buffer *b = newBuffer();
     Map *m = newMap();
     HttpFetch("https://example.com", "index.html", b, m);
+    string t = m->proto->get(m, "content-type");
+    if (t) {
+        puts(t);
+        string u = Stringify(b->data, b->size);
+        puts(u);
+        free(u);
+    }
+    b->proto->destroy(b);
+    m->proto->destroy(m, MapHook);
 }
 
 // ArrayList *getTasks()

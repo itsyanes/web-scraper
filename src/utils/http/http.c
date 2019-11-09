@@ -4,11 +4,14 @@ static CURL *HttpPrepare();
 static CURLcode HttpExecute(CURL *curl, string uri, string resourceName, Buffer *body, Buffer *headers);
 static void HttpFinalize(CURLcode code, string resourceName, Buffer *headersBuffer, Map *headers);
 static size_t HttpFillBuffer(string ptr, size_t size, size_t nmemb, void *dataBuffer);
-static size_t HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers);
+static bool HttpIsHeader(void *e, size_t i);
+static void *HttpExtractHeaderKey(void *e, size_t i);
+static void *HttpExtractHeaderValue(void *e, size_t i);
+static void HttpFreeDataList(void *e);
+static void HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers);
 
 void HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers)
 {
-
 }
 
 void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers)
@@ -80,13 +83,54 @@ size_t HttpFillBuffer(string ptr, size_t size, size_t nmemb, void *dataBuffer)
     return size * nmemb;
 }
 
-size_t HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers)
+bool HttpIsHeader(void *e, size_t i)
 {
-    string h = Stringify(headers->data, headers->size);
+    return ((String *)e)->proto->includes((String *)e, ":");
+}
 
-    puts(h);
+void *HttpExtractHeaderKey(void *e, size_t i)
+{
+    String *key = ((String *)e)->proto->slice((String *)e, 0, ((String *)e)->proto->indexOf((String *)e, ':'));
+    return key->proto->trim(key);
+}
 
-    return headers->size;
+void *HttpExtractHeaderValue(void *e, size_t i)
+{
+    String *value = ((String *)e)->proto->slice((String *)e, ((String *)e)->proto->indexOf((String *)e, ':') + 1, ((String *)e)->proto->length((String *)e));
+    return value->proto->trim(value);
+}
+
+void HttpFreeDataList(void *e)
+{
+    ((String *)e)->proto->destroy((String *)e);
+}
+
+void HttpRetrieveHeaders(Map *headers, Buffer *headersBuffer)
+{
+    string headerData = Stringify(headersBuffer->data, headersBuffer->size);
+    String *wrapper = wrapString(headerData);
+    free(headerData);
+
+    ArrayList *splitLines = wrapper->proto->split(wrapper, "\n");
+    ArrayList *headersLines = splitLines->proto->filter(splitLines, HttpIsHeader);
+    ArrayList *headersKeys = headersLines->proto->map(headersLines, HttpExtractHeaderKey);
+    ArrayList *headersValues = headersLines->proto->map(headersLines, HttpExtractHeaderValue);
+
+    wrapper->proto->destroy(wrapper);
+    splitLines->proto->destroy(splitLines, HttpFreeDataList);
+    headersLines->proto->destroy(headersLines, NULL);
+
+    for (size_t i = 0; i < headersKeys->size; i++)
+    {
+        String *keyWrapper = headersKeys->proto->get(headersKeys, i);
+        string key = keyWrapper->proto->toString(keyWrapper);
+        String *valueWrapper = headersValues->proto->get(headersValues, i);
+        string value = valueWrapper->proto->toString(valueWrapper);
+        headers->proto->set(headers, key, value);
+    }
+
+    headersKeys->proto->destroy(headersKeys, NULL);
+    headersValues->proto->destroy(headersValues, NULL);
 }
 
 // size_t HttpWriteFile(string ptr, size_t size, size_t nmemb, void *userdata)
