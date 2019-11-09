@@ -336,10 +336,11 @@ ArrayList *StringSplit(String *wrapper, string separators)
 
     if (strlen(tail) > 0)
     {
-        printf("%p %p\n", head, tail);
         string buffer = xmalloc(strlen(tail) + 1, sizeof(char));
+
         strcpy(buffer, tail);
         list->proto->push(list, wrapString(buffer));
+
         free(buffer);
     }
 
