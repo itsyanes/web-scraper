@@ -5,6 +5,7 @@ static void ScraperScrap(Scraper *scraper);
 static string ScraperGetDomainName(string uri);
 static void ScraperDestroy(Scraper *scraper);
 static void ScraperFreeHeaders(string key, void *value);
+static string ScraperGetBasePath(string outputDir, string uri);
 
 Scraper *newScraper()
 {
@@ -12,6 +13,7 @@ Scraper *newScraper()
     scraper->uri = stringFromFormat("%s", SCRAPER_DEFAULT_URI);
     scraper->maxDepth = 0;
     scraper->outputDir = stringFromFormat("%s", SCRAPER_DEFAULT_OUTPUT_DIR);
+    scraper->basePath = ScraperGetBasePath(scraper->outputDir, scraper->uri);
     scraper->options = &ScraperChangeOptions;
     scraper->scrap = &ScraperScrap;
     scraper->destroy = &ScraperDestroy;
@@ -22,27 +24,31 @@ void ScraperChangeOptions(Scraper *scraper, string uri, u_int8_t maxDepth, strin
 {
     free(scraper->uri);
     free(scraper->outputDir);
+    free(scraper->basePath);
     scraper->uri = stringFromFormat("%s", uri);
     scraper->maxDepth = maxDepth;
     scraper->outputDir = stringFromFormat("%s", outputDir);
 }
 
+string ScraperGetBasePath(string outputDir, string uri)
+{
+    string domainName = ScraperGetDomainName(uri);
+    string basePath = stringFromFormat("%s/%s", outputDir, domainName);
+    free(domainName);
+    return basePath;
+}
+
 void ScraperScrap(Scraper *scraper)
 {
-    String *basePath = newString();
     String *currentFilePath = newString();
     Map *headers = newMap();
-    string domainName = ScraperGetDomainName(scraper->uri);
-    basePath->proto->build(basePath, "%s/%s", scraper->outputDir, domainName);
-    createDirectory(basePath->string);
-    free(domainName);
-    currentFilePath->proto->build(currentFilePath, "%s/%s", basePath->string, SCRAPER_INDEX_NAME);
+    createDirectory(scraper->basePath);
+    currentFilePath->proto->build(currentFilePath, "%s/%s", scraper->basePath, SCRAPER_INDEX_NAME);
     HttpDownloadFile(scraper->uri, SCRAPER_INDEX_NAME, currentFilePath->string, headers);
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
     {
     }
     headers->proto->destroy(headers, ScraperFreeHeaders);
-    basePath->proto->destroy(basePath);
     currentFilePath->proto->destroy(currentFilePath);
 }
 
@@ -74,5 +80,6 @@ void ScraperDestroy(Scraper *scraper)
 {
     free(scraper->uri);
     free(scraper->outputDir);
+    free(scraper->basePath);
     free(scraper);
 }
