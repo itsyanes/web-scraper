@@ -22,15 +22,11 @@ bool BufferIsAllocated(Buffer *buffer)
 
 BufferPrototype *getBufferProto()
 {
-    static BufferPrototype *proto = NULL;
-    if (!proto)
-    {
-        proto = xmalloc(1, sizeof(BufferPrototype));
-        proto->destroy = &BufferDestroyBuffer;
-        proto->clone = &BufferClone;
-        proto->append = &BufferAppend;
-    }
-    return proto;
+    static BufferPrototype proto;
+    proto.destroy = &BufferDestroyBuffer;
+    proto.clone = &BufferClone;
+    proto.append = &BufferAppend;
+    return &proto;
 }
 
 Buffer *BufferClone(Buffer *buffer)

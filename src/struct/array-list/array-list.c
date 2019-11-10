@@ -37,32 +37,28 @@ ArrayList *newArrayList()
 
 ArrayListPrototype *getArrayListProto()
 {
-    static ArrayListPrototype *proto = NULL;
-    if (!proto)
-    {
-        proto = xmalloc(1, sizeof(ArrayListPrototype));
-        proto->fill = &ArrayListFill;
-        proto->push = &ArrayListPush;
-        proto->pop = &ArrayListPop;
-        proto->clone = &ArrayListClone;
-        proto->get = &ArrayListGet;
-        proto->set = &ArrayListSet;
-        proto->concat = &ArrayListConcat;
-        proto->every = &ArrayListEvery;
-        proto->filter = &ArrayListFilter;
-        proto->destroy = &ArrayListDestroy;
-        proto->forEach = &ArrayListForEach;
-        proto->find = &ArrayListFind;
-        proto->findIndex = &ArrayListFindIndex;
-        proto->includes = &ArrayListIncludes;
-        proto->indexOf = &ArrayListIndexOf;
-        proto->map = &ArrayListMap;
-        proto->reduce = &ArrayListReduce;
-        proto->slice = &ArrayListSlice;
-        proto->some = &ArrayListSome;
-        proto->sort = &ArrayListSort;
-    }
-    return proto;
+    static ArrayListPrototype proto;
+    proto.fill = &ArrayListFill;
+    proto.push = &ArrayListPush;
+    proto.pop = &ArrayListPop;
+    proto.clone = &ArrayListClone;
+    proto.get = &ArrayListGet;
+    proto.set = &ArrayListSet;
+    proto.concat = &ArrayListConcat;
+    proto.every = &ArrayListEvery;
+    proto.filter = &ArrayListFilter;
+    proto.destroy = &ArrayListDestroy;
+    proto.forEach = &ArrayListForEach;
+    proto.find = &ArrayListFind;
+    proto.findIndex = &ArrayListFindIndex;
+    proto.includes = &ArrayListIncludes;
+    proto.indexOf = &ArrayListIndexOf;
+    proto.map = &ArrayListMap;
+    proto.reduce = &ArrayListReduce;
+    proto.slice = &ArrayListSlice;
+    proto.some = &ArrayListSome;
+    proto.sort = &ArrayListSort;
+    return &proto;
 }
 
 bool ArrayListIsAllocated(ArrayList *list)

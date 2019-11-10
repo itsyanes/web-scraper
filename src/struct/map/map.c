@@ -32,19 +32,15 @@ Map *newMap()
 
 MapPrototype *getMapProto()
 {
-    static MapPrototype *proto = NULL;
-    if (!proto)
-    {
-        proto = xmalloc(1, sizeof(MapPrototype));
-        proto->set = &MapSet;
-        proto->get = &MapGet;
-        proto->has = &MapHas;
-        proto->forEach = &MapForEach;
-        proto->delete = &MapDelete;
-        proto->clear = &MapClear;
-        proto->destroy = &MapDestroy;
-    }
-    return proto;
+    static MapPrototype proto;
+    proto.set = &MapSet;
+    proto.get = &MapGet;
+    proto.has = &MapHas;
+    proto.forEach = &MapForEach;
+    proto.delete = &MapDelete;
+    proto.clear = &MapClear;
+    proto.destroy = &MapDestroy;
+    return &proto;
 }
 
 void *MapGet(Map *map, string key)

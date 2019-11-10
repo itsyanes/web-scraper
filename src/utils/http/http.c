@@ -125,7 +125,8 @@ void HttpRetrieveHeaders(Map *headers, Buffer *headersBuffer)
     splitLines->proto->destroy(splitLines, HttpFreeDataList);
     headersLines->proto->destroy(headersLines, NULL);
 
-    for (size_t i = 0; i < headersKeys->size; i++)
+    size_t length = headersKeys->size;
+    for (size_t i = 0; i < length; i++)
     {
         String *keyWrapper = headersKeys->proto->pop(headersKeys);
         string key = keyWrapper->proto->toString(keyWrapper);

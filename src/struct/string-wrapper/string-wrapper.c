@@ -41,30 +41,26 @@ String *wrapString(string str)
 
 StringPrototype *getStringProto()
 {
-    static StringPrototype *proto = NULL;
-    if (!proto)
-    {
-        proto = xmalloc(1, sizeof(StringPrototype));
-        proto->length = &StringLength;
-        proto->destroy = &StringDestroy;
-        proto->build = &StringBuild;
-        proto->charAt = &StringCharAt;
-        proto->indexOf = &StringIndexOf;
-        proto->lastIndexOf = &StringLastIndexOf;
-        proto->concat = &StringConcat;
-        proto->includes = &StringIncludes;
-        proto->startsWith = &StringStartsWith;
-        proto->endsWith = &StringEndsWith;
-        proto->replace = &StringReplace;
-        proto->reverse = &StringReverse;
-        proto->trim = &StringTrim;
-        proto->slice = &StringSlice;
-        proto->toString = &StringToString;
-        proto->clone = &StringClone;
-        proto->search = &StringSearch;
-        proto->split = &StringSplit;
-    }
-    return proto;
+    static StringPrototype proto;
+    proto.length = &StringLength;
+    proto.destroy = &StringDestroy;
+    proto.build = &StringBuild;
+    proto.charAt = &StringCharAt;
+    proto.indexOf = &StringIndexOf;
+    proto.lastIndexOf = &StringLastIndexOf;
+    proto.concat = &StringConcat;
+    proto.includes = &StringIncludes;
+    proto.startsWith = &StringStartsWith;
+    proto.endsWith = &StringEndsWith;
+    proto.replace = &StringReplace;
+    proto.reverse = &StringReverse;
+    proto.trim = &StringTrim;
+    proto.slice = &StringSlice;
+    proto.toString = &StringToString;
+    proto.clone = &StringClone;
+    proto.search = &StringSearch;
+    proto.split = &StringSplit;
+    return &proto;
 }
 
 bool StringIsAllocated(String *wrapper)
