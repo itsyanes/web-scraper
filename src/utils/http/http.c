@@ -9,9 +9,14 @@ static void *HttpExtractHeaderKey(void *e, size_t i);
 static void *HttpExtractHeaderValue(void *e, size_t i);
 static void HttpFreeDataList(void *e);
 static void HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers);
+size_t HttpWriteFile(string output, Buffer *data);
 
 void HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers)
 {
+    Buffer *body = newBuffer();
+    HttpFetch(uri, resourceName, body, headers);
+    HttpWriteFile(outputDir, body);
+    body->proto->destroy(body);
 }
 
 void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers)
@@ -122,9 +127,9 @@ void HttpRetrieveHeaders(Map *headers, Buffer *headersBuffer)
 
     for (size_t i = 0; i < headersKeys->size; i++)
     {
-        String *keyWrapper = headersKeys->proto->get(headersKeys, i);
+        String *keyWrapper = headersKeys->proto->pop(headersKeys);
         string key = keyWrapper->proto->toString(keyWrapper);
-        String *valueWrapper = headersValues->proto->get(headersValues, i);
+        String *valueWrapper = headersValues->proto->pop(headersValues);
         string value = valueWrapper->proto->toString(valueWrapper);
         headers->proto->set(headers, key, value);
     }
@@ -133,18 +138,18 @@ void HttpRetrieveHeaders(Map *headers, Buffer *headersBuffer)
     headersValues->proto->destroy(headersValues, NULL);
 }
 
-// size_t HttpWriteFile(string ptr, size_t size, size_t nmemb, void *userdata)
-// {
-//     size_t writtenBytes = 0;
-//     FILE *f = fopen((string)userdata, "a");
-//     if (f)
-//     {
-//         writtenBytes = fprintf(f, "%s", ptr);
-//         fclose(f);
-//     }
-//     else
-//     {
-//         logger.sysError((string)userdata);
-//     }
-//     return writtenBytes;
-// }
+size_t HttpWriteFile(string output, Buffer *data)
+{
+    size_t writtenBytes = 0;
+    FILE *f = fopen(output, "w");
+    if (f)
+    {
+        writtenBytes = fwrite(data->data, 1, data->size, f);
+        fclose(f);
+    }
+    else
+    {
+        logger.sysError(output);
+    }
+    return writtenBytes;
+}
