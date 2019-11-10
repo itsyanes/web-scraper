@@ -143,6 +143,7 @@ void MapResize(Map *map)
         }
         temp[i]->proto->destroy(temp[i], NULL);
     }
+    free(temp);
 }
 
 u_int32_t MapHash(const u_int8_t *key, size_t length)
