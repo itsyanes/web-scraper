@@ -20,7 +20,7 @@ Task *newTask(time_t delay, ArrayList *scrapers)
 
 void TaskStop(Task *task)
 {
-    kill(task->_pid, SIGKILL);
+    kill(task->_pid, SIGTERM);
     TaskDestroy(task);
 }
 
@@ -40,13 +40,16 @@ void TaskStart(Task *task)
         return;
     }
 
-    while (true)
+    size_t i = 0;
+    while (i < DEFAULT_MAX_ITER)
     {
         task->scrapers->proto->forEach(task->scrapers, TaskStartScrap);
         TaskSleep(task);
+        i++;
     }
 
-    exit(0);
+    TaskDestroy(task);
+    exit(EXIT_SUCCESS);
 }
 
 void TaskStartScrap(void *element, size_t index)
@@ -67,7 +70,7 @@ pid_t TaskInit()
 
     if (pid == PROCESS_CREATION_FAILED)
     {
-        logger.error("Task creation failed!");
+        logger.sysError("Task creation failed");
     }
 
     return pid;

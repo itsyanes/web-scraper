@@ -8,7 +8,8 @@
 #include "app/app.h"
 
 #define PROCESS_CREATION_FAILED -1
-#define SIGKILL 9
+#define HANDLER_ATTACHMENT_FAILED -1
+#define DEFAULT_MAX_ITER 5
 
 typedef struct Task Task;
 struct Task

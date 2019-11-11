@@ -18,7 +18,7 @@ void loop()
     Scraper *s = newScraper();
     s->options(s, "https://developer.mozilla.org/fr/docs/Web/HTTP/CORS", 0, getenv("PWD"));
     scrapers->proto->push(scrapers, s);
-    Task *t = newTask(10, scrapers);
+    Task *t = newTask(2, scrapers);
     t->start(t);
     int status;
     wait(&status);
