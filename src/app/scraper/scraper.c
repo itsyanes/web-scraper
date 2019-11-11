@@ -44,6 +44,9 @@ void ScraperScrap(Scraper *scraper)
 
     Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->outputDir);
     dl->start(dl);
+    // string mime = dl->getMimeType(dl);
+    // puts(mime);
+    // free(mime);
     dl->destroy(dl);
 
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)

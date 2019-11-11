@@ -6,6 +6,8 @@
 #include "utils/utils.h"
 #include "struct/struct.h"
 
+#define DOWNLOAD_HEADER_MIME_TYPE "content-type"
+
 typedef struct Download Download;
 
 struct Download
@@ -16,6 +18,7 @@ struct Download
     Map *headers;
     Buffer *body;
     void (*start)(Download *download);
+    string (*getMimeType)(Download *download);
     void (*destroy)(Download *download);
 };
 
