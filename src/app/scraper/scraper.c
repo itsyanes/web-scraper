@@ -28,6 +28,7 @@ void ScraperChangeOptions(Scraper *scraper, string uri, u_int8_t maxDepth, strin
     scraper->uri = stringFromFormat("%s", uri);
     scraper->maxDepth = maxDepth;
     scraper->outputDir = stringFromFormat("%s", outputDir);
+    scraper->basePath = ScraperGetBasePath(scraper->outputDir, scraper->uri);
 }
 
 string ScraperGetBasePath(string outputDir, string uri)
