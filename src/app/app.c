@@ -2,17 +2,13 @@
 
 #include "scraper/scraper.c"
 #include "task/task.c"
+#include "download/download.c"
 
 void init()
 {
     curl_global_init(CURL_GLOBAL_DEFAULT);
     initLogger();
     setLogger(stdout, stderr, LOGGER_ALL);
-}
-
-void MapHook(string key, void *value) {
-    free(key);
-    free(value);
 }
 
 void loop()

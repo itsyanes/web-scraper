@@ -4,7 +4,6 @@ static void ScraperChangeOptions(Scraper *scraper, string uri, u_int8_t maxDepth
 static void ScraperScrap(Scraper *scraper);
 static string ScraperGetDomainName(string uri);
 static void ScraperDestroy(Scraper *scraper);
-static void ScraperFreeHeaders(string key, void *value);
 static string ScraperGetBasePath(string outputDir, string uri);
 
 Scraper *newScraper()
@@ -41,22 +40,17 @@ string ScraperGetBasePath(string outputDir, string uri)
 
 void ScraperScrap(Scraper *scraper)
 {
-    String *currentFilePath = newString();
-    Map *headers = newMap();
     createDirectory(scraper->basePath);
-    currentFilePath->proto->build(currentFilePath, "%s/%s", scraper->basePath, SCRAPER_INDEX_NAME);
-    HttpDownloadFile(scraper->uri, SCRAPER_INDEX_NAME, currentFilePath->string, headers);
+
+    Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->outputDir);
+    dl->start(dl);
+    dl->destroy(dl);
+
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
     {
-    }
-    headers->proto->destroy(headers, ScraperFreeHeaders);
-    currentFilePath->proto->destroy(currentFilePath);
-}
+        //ArrayList *HTMLFiles = newArrayList();
 
-void ScraperFreeHeaders(string key, void *value)
-{
-    free(key);
-    free(value);
+    }
 }
 
 string ScraperGetDomainName(string uri)

@@ -9,14 +9,14 @@ static void *HttpExtractHeaderKey(void *e, size_t i);
 static void *HttpExtractHeaderValue(void *e, size_t i);
 static void HttpFreeDataList(void *e);
 static void HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers);
-size_t HttpWriteFile(string output, Buffer *data);
+static size_t HttpWriteFile(string output, Buffer *data);
 
-void HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers)
+Buffer *HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers)
 {
     Buffer *body = newBuffer();
     HttpFetch(uri, resourceName, body, headers);
     HttpWriteFile(outputDir, body);
-    body->proto->destroy(body);
+    return body;
 }
 
 void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers)

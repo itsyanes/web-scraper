@@ -8,7 +8,7 @@
 #include "struct/map/map.h"
 #include "struct/array-list/array-list.h"
 
-void HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers);
+Buffer *HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers);
 void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers);
 
 #endif
