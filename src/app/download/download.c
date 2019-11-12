@@ -36,8 +36,9 @@ string DownloadGetMimeType(Download *download)
         return stringFromFormat("");
     }
 
-    String *m = mimeType;
+    String *m = wrapString((string)mimeType);
     String *res = m->proto->slice(m, 0, m->proto->indexOf(m, ';'));
+    m->proto->destroy(m);
     return res->proto->trim(res)->proto->toString(res);
 }
 

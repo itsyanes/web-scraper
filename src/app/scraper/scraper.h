@@ -10,6 +10,7 @@
 #define SCRAPER_DEFAULT_URI "https://example.com"
 #define SCRAPER_DEFAULT_OUTPUT_DIR getenv("PWD")
 #define SCRAPER_INDEX_NAME "index.html"
+#define HTML_CONTENT_TYPE "text/html"
 
 typedef struct Scraper Scraper;
 struct Scraper

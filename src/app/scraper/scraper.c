@@ -44,15 +44,26 @@ void ScraperScrap(Scraper *scraper)
 
     Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->outputDir);
     dl->start(dl);
-    // string mime = dl->getMimeType(dl);
-    // puts(mime);
-    // free(mime);
+    string mime = dl->getMimeType(dl);
+
+    // if (stringsAreEqual(mime, HTML_CONTENT_TYPE))
+    // {
+    //     // getLinks(); -> arrayList of Links
+    //     // -> transform Links into Download Objects
+    //     // -> 
+    // }
+
+    free(mime);
     dl->destroy(dl);
 
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
     {
-        //ArrayList *HTMLFiles = newArrayList();
-
+        // ArrayList downloads
+        // download foreach
+        // getMimeTypes
+        // if html
+        // getlinks -> merge into links arraylist
+        // toDownloads
     }
 }
 
