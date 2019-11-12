@@ -19,6 +19,7 @@ static string StringToString(String *wrapper);
 static String *StringClone(String *wrapper);
 static String *StringSearch(String *wrapper, string pattern);
 static ArrayList *StringSplit(String *wrapper, string separators);
+static string StringFind(String *wrapper, string pattern);
 static void StringDestroy(String *wrapper);
 
 String *newString()
@@ -58,8 +59,9 @@ StringPrototype *getStringProto()
     proto.slice = &StringSlice;
     proto.toString = &StringToString;
     proto.clone = &StringClone;
-    proto.search = &StringSearch;
+    proto.searchAndCut = &StringSearch;
     proto.split = &StringSplit;
+    proto.find = &StringFind;
     return &proto;
 }
 
@@ -304,6 +306,11 @@ String *StringSearch(String *wrapper, string pattern)
 {
     string occurence = strstr(wrapper->string, pattern);
     return occurence ? wrapString(occurence) : newString();
+}
+
+string StringFind(String *wrapper, string pattern)
+{
+    return strstr(wrapper->string, pattern);
 }
 
 ArrayList *StringSplit(String *wrapper, string separators)
