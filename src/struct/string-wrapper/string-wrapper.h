@@ -35,7 +35,7 @@ struct StringPrototype
     String *(*clone)(String *wrapper);
     ArrayList *(*split)(String *wrapper, string separators);
     String *(*searchAndCut)(String *wrapper, string pattern);
-    String *(*find)(String *wrapper, string pattern);
+    string (*find)(String *wrapper, string pattern);
 };
 
 String *newString();

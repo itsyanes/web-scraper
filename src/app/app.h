@@ -7,6 +7,7 @@
 #include "app/scraper/scraper.h"
 #include "app/task/task.h"
 #include "app/download/download.h"
+#include "app/download/download.h"
 
 void init();
 void loop();

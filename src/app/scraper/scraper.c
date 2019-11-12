@@ -44,16 +44,18 @@ void ScraperScrap(Scraper *scraper)
 
     Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->outputDir);
     dl->start(dl);
-    string mime = dl->getMimeType(dl);
+    //string mime = dl->getMimeType(dl);
 
     // if (stringsAreEqual(mime, HTML_CONTENT_TYPE))
     // {
     //     // getLinks(); -> arrayList of Links
     //     // -> transform Links into Download Objects
-    //     // -> 
+    //     // ->
     // }
-
-    free(mime);
+    // ArrayList *l = HTMLGetLinks(dl->body);
+    // l->proto->forEach(l, debug);
+    // l->proto->destroy(l, hook);
+    //free(mime);
     dl->destroy(dl);
 
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
@@ -73,7 +75,7 @@ string ScraperGetDomainName(string uri)
 
     if (wrapper->proto->includes(wrapper, "//"))
     {
-        String *tmp = wrapper->proto->search(wrapper, "//");
+        String *tmp = wrapper->proto->searchAndCut(wrapper, "//");
         wrapper->proto->destroy(wrapper);
         wrapper = tmp->proto->slice(tmp, 2, tmp->proto->length(tmp));
         tmp->proto->destroy(tmp);

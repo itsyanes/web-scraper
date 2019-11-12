@@ -53,7 +53,7 @@ void DownloadDestroy(Download *download)
     download->headers->proto->destroy(download->headers, DownloadFreeHeaders);
     if (download->body)
     {
-        download->body->proto->destroy(download->body);
+        free(download->body);
     }
     free(download->outputPath);
     free(download->fileName);

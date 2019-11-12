@@ -3,6 +3,7 @@
 #include "scraper/scraper.c"
 #include "task/task.c"
 #include "download/download.c"
+#include "html/html.c"
 
 void init()
 {
@@ -16,7 +17,7 @@ void loop()
     // ArrayList *tasks = getTasks();
     ArrayList *scrapers = newArrayList();
     Scraper *s = newScraper();
-    s->options(s, "https://developer.mozilla.org/fr/docs/Web/HTTP/CORS", 0, getenv("PWD"));
+    s->options(s, "https://example.com", 0, getenv("PWD"));
     scrapers->proto->push(scrapers, s);
     Task *t = newTask(2, scrapers);
     t->start(t);

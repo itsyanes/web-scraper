@@ -11,12 +11,14 @@ static void HttpFreeDataList(void *e);
 static void HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers);
 static size_t HttpWriteFile(string output, Buffer *data);
 
-Buffer *HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers)
+string HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers)
 {
     Buffer *body = newBuffer();
     HttpFetch(uri, resourceName, body, headers);
     HttpWriteFile(outputDir, body);
-    return body;
+    string stringifiedBody = Stringify((byte *)body->data, body->size);
+    body->proto->destroy(body);
+    return stringifiedBody;
 }
 
 void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers)
