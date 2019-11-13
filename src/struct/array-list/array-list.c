@@ -24,6 +24,8 @@ static ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end);
 static bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index));
 static void ArrayListSwap(ArrayList *list, size_t src, size_t dest);
 static ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element));
+static ArrayList *ArrayListFlat(ArrayList *list);
+ArrayList *ArrayListFlatMap(ArrayList *list, void *(*mapper)(void *element, size_t index));
 
 ArrayList *newArrayList()
 {
@@ -58,6 +60,8 @@ ArrayListPrototype *getArrayListProto()
     proto.slice = &ArrayListSlice;
     proto.some = &ArrayListSome;
     proto.sort = &ArrayListSort;
+    proto.flat = &ArrayListFlat;
+    proto.flatMap = &ArrayListFlatMap;
     return &proto;
 }
 
@@ -316,6 +320,37 @@ ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element))
         }
     }
     return list;
+}
+
+ArrayList *ArrayListFlat(ArrayList *list)
+{
+    ArrayList *res = newArrayList();
+    for (size_t i = 0; i < list->size; i++)
+    {
+        ArrayList *current = list->proto->get(list, i);
+        for (size_t j = 0; j < current->size; j++)
+        {
+            res->proto->push(res, current->proto->get(current, j));
+        }
+    }
+    return res;
+}
+
+ArrayList *ArrayListFlatMap(ArrayList *list, void *(*mapper)(void *element, size_t index))
+{
+    ArrayList *res = newArrayList();
+
+    for (size_t i = 0; i < list->size; i++)
+    {
+        ArrayList *current = mapper(list->proto->get(list, i), i);
+        for (size_t j = 0; j < current->size; j++)
+        {
+            res->proto->push(res, current->proto->get(current, j));
+        }
+        current->proto->destroy(current, NULL);
+    }
+
+    return res;
 }
 
 void ArrayListDestroy(ArrayList *list, void (*hook)(void *element))

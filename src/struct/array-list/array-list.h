@@ -31,6 +31,8 @@ struct ArrayListPrototype
     ArrayList *(*slice)(ArrayList *list, size_t start, size_t end);
     bool (*some)(ArrayList *list, bool (*predicate)(void *element, size_t index));
     ArrayList *(*sort)(ArrayList *list, size_t (*sortFunc)(void *element));
+    ArrayList *(*flat)(ArrayList *list);
+    ArrayList *(*flatMap)(ArrayList *list, void *(*mapper)(void *element, size_t index));
     void (*destroy)(ArrayList *list, void (*hook)(void *element));
 };
 
