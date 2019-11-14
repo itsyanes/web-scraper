@@ -6,8 +6,8 @@
 #include "utils/utils.h"
 #include "struct/struct.h"
 
-#define ATTR_SRC "src="
-#define ATTR_HREF "href="
+#define ATTR_SRC "src=\""
+#define ATTR_HREF "href=\""
 #define VALUE_DELIMITER '"'
 
 ArrayList *HTMLGetLinks(string htmlBody);
