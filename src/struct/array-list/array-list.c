@@ -10,22 +10,22 @@ static ArrayList *ArrayListClone(ArrayList *list);
 static void *ArrayListGet(ArrayList *list, size_t index);
 static void ArrayListSet(ArrayList *list, size_t index, void *value);
 static ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2);
-static bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index));
-static ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index));
-static void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index));
-static long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index));
-static void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index));
+static bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data);
+static ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data);
+static void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data);
+static long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data);
+static void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index, void *data), void *data);
 static void ArrayListDestroy(ArrayList *list, void (*hook)(void *element));
 static bool ArrayListIncludes(ArrayList *list, void *element);
 static long ArrayListIndexOf(ArrayList *list, void *element);
-static ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t index));
-static void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue);
+static ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t index, void *data), void *data);
+static void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue, void *data), void *initialValue, void *data);
 static ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end);
-static bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index));
+static bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data);
 static void ArrayListSwap(ArrayList *list, size_t src, size_t dest);
-static ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element));
+static ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element, void *data), void *data);
 static ArrayList *ArrayListFlat(ArrayList *list);
-ArrayList *ArrayListFlatMap(ArrayList *list, void *(*mapper)(void *element, size_t index));
+ArrayList *ArrayListFlatMap(ArrayList *list, void *(*mapper)(void *element, size_t index, void *data), void *data);
 
 ArrayList *newArrayList()
 {
@@ -163,11 +163,11 @@ ArrayList *ArrayListConcat(ArrayList *list, ArrayList *list2)
     return new;
 }
 
-bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index))
+bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data)
 {
     for (size_t i = 0; i < list->size; i++)
     {
-        if (!predicate(list->proto->get(list, i), i))
+        if (!predicate(list->proto->get(list, i), i, data))
         {
             return false;
         }
@@ -175,12 +175,12 @@ bool ArrayListEvery(ArrayList *list, bool (*predicate)(void *element, size_t ind
     return true;
 }
 
-ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index))
+ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data)
 {
     ArrayList *new = newArrayList();
     for (size_t i = 0; i < list->size; i++)
     {
-        if (predicate(list->proto->get(list, i), i))
+        if (predicate(list->proto->get(list, i), i, data))
         {
             new->proto->push(new, list->proto->get(list, i));
         }
@@ -188,11 +188,11 @@ ArrayList *ArrayListFilter(ArrayList *list, bool (*predicate)(void *element, siz
     return new;
 }
 
-void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index))
+void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data)
 {
     for (size_t i = 0; i < list->size; i++)
     {
-        if (predicate(list->proto->get(list, i), i))
+        if (predicate(list->proto->get(list, i), i, data))
         {
             return list->proto->get(list, i);
         }
@@ -200,11 +200,11 @@ void *ArrayListFind(ArrayList *list, bool (*predicate)(void *element, size_t ind
     return NULL;
 }
 
-long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index))
+long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data)
 {
     for (size_t i = 0; i < list->size; i++)
     {
-        if (predicate(list->proto->get(list, i), i))
+        if (predicate(list->proto->get(list, i), i, data))
         {
             return i;
         }
@@ -212,11 +212,11 @@ long ArrayListFindIndex(ArrayList *list, bool (*predicate)(void *element, size_t
     return -1;
 }
 
-void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index))
+void ArrayListForEach(ArrayList *list, void (*callback)(void *element, size_t index, void *data), void *data)
 {
     for (size_t i = 0; i < list->size; i++)
     {
-        callback(list->proto->get(list, i), i);
+        callback(list->proto->get(list, i), i, data);
     }
 }
 
@@ -244,23 +244,23 @@ long ArrayListIndexOf(ArrayList *list, void *element)
     return -1;
 }
 
-ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t index))
+ArrayList *ArrayListMap(ArrayList *list, void *(*mapper)(void *element, size_t index, void *data), void *data)
 {
     ArrayList *res = newArrayList();
 
     for (size_t i = 0; i < list->size; i++)
     {
-        res->proto->push(res, mapper(list->proto->get(list, i), i));
+        res->proto->push(res, mapper(list->proto->get(list, i), i, data));
     }
 
     return res;
 }
 
-void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue), void *initialValue)
+void *ArrayListReduce(ArrayList *list, void *(*reducer)(void *accumulator, void *currentValue, void *data), void *initialValue, void *data)
 {
     for (size_t i = 0; i < list->size; i++)
     {
-        initialValue = reducer(initialValue, list->proto->get(list, i));
+        initialValue = reducer(initialValue, list->proto->get(list, i), data);
     }
 
     return initialValue;
@@ -283,11 +283,11 @@ ArrayList *ArrayListSlice(ArrayList *list, size_t start, size_t end)
     return new;
 }
 
-bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index))
+bool ArrayListSome(ArrayList *list, bool (*predicate)(void *element, size_t index, void *data), void *data)
 {
     for (size_t i = 0; i < list->size; i++)
     {
-        if (predicate(list->proto->get(list, i), i))
+        if (predicate(list->proto->get(list, i), i, data))
         {
             return true;
         }
@@ -307,13 +307,13 @@ void ArrayListSwap(ArrayList *list, size_t src, size_t dest)
     list->proto->set(list, src, temp);
 }
 
-ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element))
+ArrayList *ArrayListSort(ArrayList *list, size_t (*sortFunc)(void *element, void *data), void *data)
 {
     for (size_t i = 0; i < list->size; i++)
     {
         for (size_t j = 0; j < list->size; j++)
         {
-            if (j > i && sortFunc(list->proto->get(list, i)) > sortFunc(list->proto->get(list, j)))
+            if (j > i && sortFunc(list->proto->get(list, i), data) > sortFunc(list->proto->get(list, j), data))
             {
                 ArrayListSwap(list, i, j);
             }
@@ -336,13 +336,13 @@ ArrayList *ArrayListFlat(ArrayList *list)
     return res;
 }
 
-ArrayList *ArrayListFlatMap(ArrayList *list, void *(*mapper)(void *element, size_t index))
+ArrayList *ArrayListFlatMap(ArrayList *list, void *(*mapper)(void *element, size_t index, void *data), void *data)
 {
     ArrayList *res = newArrayList();
 
     for (size_t i = 0; i < list->size; i++)
     {
-        ArrayList *current = mapper(list->proto->get(list, i), i);
+        ArrayList *current = mapper(list->proto->get(list, i), i, data);
         for (size_t j = 0; j < current->size; j++)
         {
             res->proto->push(res, current->proto->get(current, j));

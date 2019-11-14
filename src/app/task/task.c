@@ -2,7 +2,7 @@
 
 static void TaskStop(Task *task);
 static void TaskStart(Task *task);
-static void TaskStartScrap(void *element, size_t index);
+static void TaskStartScrap(void *element, size_t index, void *data);
 static void TaskSleep(Task *task);
 static pid_t TaskInit();
 static void TaskDestroy(Task *task);
@@ -43,7 +43,7 @@ void TaskStart(Task *task)
     size_t i = 0;
     while (i < DEFAULT_MAX_ITER)
     {
-        task->scrapers->proto->forEach(task->scrapers, TaskStartScrap);
+        task->scrapers->proto->forEach(task->scrapers, TaskStartScrap, NULL);
         TaskSleep(task);
         i++;
     }
@@ -52,7 +52,7 @@ void TaskStart(Task *task)
     exit(EXIT_SUCCESS);
 }
 
-void TaskStartScrap(void *element, size_t index)
+void TaskStartScrap(void *element, size_t index, void *data)
 {
     Scraper *s = element;
     s->scrap(s);

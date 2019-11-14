@@ -4,9 +4,9 @@ static CURL *HttpPrepare();
 static CURLcode HttpExecute(CURL *curl, string uri, string resourceName, Buffer *body, Buffer *headers);
 static void HttpFinalize(CURLcode code, string resourceName, Buffer *headersBuffer, Map *headers);
 static size_t HttpFillBuffer(string ptr, size_t size, size_t nmemb, void *dataBuffer);
-static bool HttpIsHeader(void *e, size_t i);
-static void *HttpExtractHeaderKey(void *e, size_t i);
-static void *HttpExtractHeaderValue(void *e, size_t i);
+static bool HttpIsHeader(void *e, size_t i, void *data);
+static void *HttpExtractHeaderKey(void *e, size_t i, void *data);
+static void *HttpExtractHeaderValue(void *e, size_t i, void *data);
 static void HttpFreeDataList(void *e);
 static void HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers);
 static size_t HttpWriteFile(string output, Buffer *data);
@@ -90,18 +90,18 @@ size_t HttpFillBuffer(string ptr, size_t size, size_t nmemb, void *dataBuffer)
     return size * nmemb;
 }
 
-bool HttpIsHeader(void *e, size_t i)
+bool HttpIsHeader(void *e, size_t i, void *data)
 {
     return ((String *)e)->proto->includes((String *)e, ":");
 }
 
-void *HttpExtractHeaderKey(void *e, size_t i)
+void *HttpExtractHeaderKey(void *e, size_t i, void *data)
 {
     String *key = ((String *)e)->proto->slice((String *)e, 0, ((String *)e)->proto->indexOf((String *)e, ':'));
     return key->proto->trim(key);
 }
 
-void *HttpExtractHeaderValue(void *e, size_t i)
+void *HttpExtractHeaderValue(void *e, size_t i, void *data)
 {
     String *value = ((String *)e)->proto->slice((String *)e, ((String *)e)->proto->indexOf((String *)e, ':') + 1, ((String *)e)->proto->length((String *)e));
     return value->proto->trim(value);
@@ -119,9 +119,9 @@ void HttpRetrieveHeaders(Map *headers, Buffer *headersBuffer)
     free(headerData);
 
     ArrayList *splitLines = wrapper->proto->split(wrapper, "\n");
-    ArrayList *headersLines = splitLines->proto->filter(splitLines, HttpIsHeader);
-    ArrayList *headersKeys = headersLines->proto->map(headersLines, HttpExtractHeaderKey);
-    ArrayList *headersValues = headersLines->proto->map(headersLines, HttpExtractHeaderValue);
+    ArrayList *headersLines = splitLines->proto->filter(splitLines, HttpIsHeader, NULL);
+    ArrayList *headersKeys = headersLines->proto->map(headersLines, HttpExtractHeaderKey, NULL);
+    ArrayList *headersValues = headersLines->proto->map(headersLines, HttpExtractHeaderValue, NULL);
 
     wrapper->proto->destroy(wrapper);
     splitLines->proto->destroy(splitLines, HttpFreeDataList);
