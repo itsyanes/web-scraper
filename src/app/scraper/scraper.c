@@ -5,6 +5,13 @@ static void ScraperScrap(Scraper *scraper);
 static string ScraperGetDomainName(string uri);
 static void ScraperDestroy(Scraper *scraper);
 static string ScraperGetBasePath(string outputDir, string uri);
+static void *ScraperDownloadFromLink(void *element, size_t index, void *data);
+static string ScraperGetResourceName(string uri);
+static void ScraperDestroyLinks(void *link);
+static void ScraperStartAllDownloads(void *e, size_t i, void *data);
+static bool ScraperDownloadIsMimeHtml(void *e, size_t i, void *data);
+static void *ScraperDownloadGetLinks(void *e, size_t i, void *data);
+static void ScraperEndAllDownloads(void *download);
 
 Scraper *newScraper()
 {
@@ -42,31 +49,23 @@ void ScraperScrap(Scraper *scraper)
 {
     createDirectory(scraper->basePath);
 
-    Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->outputDir);
+    Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->basePath);
     dl->start(dl);
-    //string mime = dl->getMimeType(dl);
-
-    // if (stringsAreEqual(mime, HTML_CONTENT_TYPE))
-    // {
-    //     // getLinks(); -> arrayList of Links
-    //     // -> transform Links into Download Objects
-    //     // ->
-    // }
-    // ArrayList *l = HTMLGetLinks(dl->body);
-    // l->proto->forEach(l, debug);
-    // l->proto->destroy(l, hook);
-    //free(mime);
+    ArrayList *links = HTMLGetLinks(dl->body);
     dl->destroy(dl);
 
     for (u_int8_t i = 0; i < scraper->maxDepth; i++)
     {
-        // ArrayList downloads
-        // download foreach
-        // getMimeTypes
-        // if html
-        // getlinks -> merge into links arraylist
-        // toDownloads
+        ArrayList *dls = links->proto->map(links, ScraperDownloadFromLink, scraper);
+        links->proto->destroy(links, ScraperDestroyLinks);
+        dls->proto->forEach(dls, ScraperStartAllDownloads, NULL);
+        ArrayList *htmls = dls->proto->filter(dls, ScraperDownloadIsMimeHtml, NULL);
+        links = htmls->proto->flatMap(htmls, ScraperDownloadGetLinks, NULL);
+        htmls->proto->destroy(htmls, NULL);
+        dls->proto->destroy(dls, ScraperEndAllDownloads);
     }
+
+    links->proto->destroy(links, ScraperDestroyLinks);
 }
 
 string ScraperGetDomainName(string uri)
@@ -85,6 +84,69 @@ string ScraperGetDomainName(string uri)
     wrapper->proto->destroy(wrapper);
     string result = domain->proto->toString(domain);
     return result;
+}
+
+void *ScraperDownloadFromLink(void *element, size_t index, void *data)
+{
+    string uri = element;
+    Scraper *scraper = data;
+    string resourceName = ScraperGetResourceName(uri);
+
+    Download *dl = newDownload(resourceName, uri, scraper->basePath);
+
+    free(resourceName);
+    return dl;
+}
+
+string ScraperGetResourceName(string uri)
+{
+    String *wrapper = wrapString(uri);
+    String *res;
+
+    if (wrapper->proto->includes(wrapper, "/"))
+    {
+        res = wrapper->proto->slice(
+            wrapper,
+            wrapper->proto->lastIndexOf(wrapper, '/'),
+            wrapper->proto->length(wrapper));
+    }
+    else
+    {
+        res = wrapper->proto->clone(wrapper);
+    }
+
+    wrapper->proto->destroy(wrapper);
+    return res->proto->toString(res);
+}
+
+void ScraperDestroyLinks(void *link)
+{
+    free(link);
+}
+
+void ScraperStartAllDownloads(void *e, size_t i, void *data)
+{
+    Download *dl = e;
+    dl->start(dl);
+}
+
+bool ScraperDownloadIsMimeHtml(void *e, size_t i, void *data)
+{
+    Download *dl = e;
+    string mime = dl->getMimeType(dl);
+    bool res = stringsAreEqual(mime, HTML_CONTENT_TYPE) || stringLength(mime) == 0;
+    free(mime);
+    return res;
+}
+
+void *ScraperDownloadGetLinks(void *e, size_t i, void *data)
+{
+    return HTMLGetLinks(((Download *)e)->body);
+}
+
+void ScraperEndAllDownloads(void *download)
+{
+    ((Download *)download)->destroy((Download *)download);
 }
 
 void ScraperDestroy(Scraper *scraper)
