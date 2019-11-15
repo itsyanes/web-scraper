@@ -8,6 +8,7 @@
 #define stringsAreEqual(A, B) (strcmp(A, B) == 0)
 #define stringFindChar(A, B) strchr(A, B)
 #define stringFindSubstr(A, B) strstr(A, B)
+#define stringLength(A) strlen(A)
 
 size_t getFormatLength(const string format, ...);
 size_t VGetFormatLength(const string format, va_list args);

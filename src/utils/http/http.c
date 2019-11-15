@@ -48,6 +48,11 @@ CURL *HttpPrepare()
 
 CURLcode HttpExecute(CURL *curl, string uri, string resourceName, Buffer *body, Buffer *headers)
 {
+    struct curl_slist *list = NULL;
+
+    list = curl_slist_append(list, USER_AGENT);
+
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
     curl_easy_setopt(curl, CURLOPT_URL, uri);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, HttpFillBuffer);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, body);
@@ -59,6 +64,8 @@ CURLcode HttpExecute(CURL *curl, string uri, string resourceName, Buffer *body, 
     free(message);
 
     CURLcode res = curl_easy_perform(curl);
+
+    curl_slist_free_all(list);
     curl_easy_cleanup(curl);
 
     return res;
