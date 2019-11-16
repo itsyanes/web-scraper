@@ -10,7 +10,7 @@
 
 #define USER_AGENT "User-Agent: Mozilla/5.0"
 
-string HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers);
-void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers);
+string HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers, bool *status);
+long HttpFetch(string uri, string resourceName, Buffer *body, Map *headers);
 
 #endif

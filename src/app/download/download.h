@@ -17,6 +17,7 @@ struct Download
     string outputPath;
     Map *headers;
     string body;
+    bool status;
     void (*start)(Download *download);
     string (*getMimeType)(Download *download);
     void (*destroy)(Download *download);

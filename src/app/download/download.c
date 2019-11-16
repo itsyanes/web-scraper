@@ -13,6 +13,7 @@ Download *newDownload(string fileName, string uri, string outputPath)
     dl->uri = stringFromFormat("%s", uri);
     dl->body = NULL;
     dl->headers = newMap();
+    dl->status = false;
     dl->destroy = &DownloadDestroy;
     dl->getMimeType = &DownloadGetMimeType;
     dl->start = &DownloadStart;
@@ -23,7 +24,11 @@ void DownloadStart(Download *download)
 {
     String *filePath = newString();
     filePath->proto->build(filePath, "%s/%s", download->outputPath, download->fileName);
-    download->body = HttpDownloadFile(download->uri, download->fileName, filePath->string, download->headers);
+    download->body = HttpDownloadFile(download->uri,
+                                      download->fileName,
+                                      filePath->string,
+                                      download->headers,
+                                      &download->status);
     filePath->proto->destroy(filePath);
 }
 

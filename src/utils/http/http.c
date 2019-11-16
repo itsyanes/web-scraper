@@ -11,17 +11,18 @@ static void HttpFreeDataList(void *e);
 static void HttpRetrieveHeaders(Map *headersBuffer, Buffer *headers);
 static size_t HttpWriteFile(string output, Buffer *data);
 
-string HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers)
+string HttpDownloadFile(string uri, string resourceName, string outputDir, Map *headers, bool *status)
 {
     Buffer *body = newBuffer();
-    HttpFetch(uri, resourceName, body, headers);
+    long code = HttpFetch(uri, resourceName, body, headers);
+    *status = code == 0;
     HttpWriteFile(outputDir, body);
     string stringifiedBody = Stringify((byte *)body->data, body->size);
     body->proto->destroy(body);
     return stringifiedBody;
 }
 
-void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers)
+long HttpFetch(string uri, string resourceName, Buffer *body, Map *headers)
 {
     CURL *curl = HttpPrepare();
 
@@ -31,7 +32,10 @@ void HttpFetch(string uri, string resourceName, Buffer *body, Map *headers)
         CURLcode code = HttpExecute(curl, uri, resourceName, body, headersBuffer);
         HttpFinalize(code, resourceName, headersBuffer, headers);
         headersBuffer->proto->destroy(headersBuffer);
+        return (long)code;
     }
+
+    return -1;
 }
 
 CURL *HttpPrepare()
@@ -78,6 +82,7 @@ void HttpFinalize(CURLcode code, string resourceName, Buffer *headersBuffer, Map
         string message = stringFromFormat("%s was successfully fetched!", resourceName);
         logger.info(message);
         free(message);
+        HttpRetrieveHeaders(headers, headersBuffer);
     }
 
     if (code != CURLE_OK)
@@ -86,8 +91,6 @@ void HttpFinalize(CURLcode code, string resourceName, Buffer *headersBuffer, Map
         logger.error(error);
         free(error);
     }
-
-    HttpRetrieveHeaders(headers, headersBuffer);
 }
 
 size_t HttpFillBuffer(string ptr, size_t size, size_t nmemb, void *dataBuffer)

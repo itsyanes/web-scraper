@@ -49,23 +49,29 @@ void ScraperScrap(Scraper *scraper)
 {
     createDirectory(scraper->basePath);
 
+    ArrayList *links;
     Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->basePath);
     dl->start(dl);
-    ArrayList *links = HTMLGetLinks(dl->body);
-    dl->destroy(dl);
 
-    for (u_int8_t i = 0; i < scraper->maxDepth; i++)
+    if (dl->status)
     {
-        ArrayList *dls = links->proto->map(links, ScraperDownloadFromLink, scraper);
+        links = HTMLGetLinks(dl->body);
+
+        for (u_int8_t i = 0; i < scraper->maxDepth; i++)
+        {
+            ArrayList *dls = links->proto->map(links, ScraperDownloadFromLink, scraper);
+            links->proto->destroy(links, ScraperDestroyLinks);
+            dls->proto->forEach(dls, ScraperStartAllDownloads, NULL);
+            ArrayList *htmls = dls->proto->filter(dls, ScraperDownloadIsMimeHtml, NULL);
+            links = htmls->proto->flatMap(htmls, ScraperDownloadGetLinks, NULL);
+            htmls->proto->destroy(htmls, NULL);
+            dls->proto->destroy(dls, ScraperEndAllDownloads);
+        }
+
         links->proto->destroy(links, ScraperDestroyLinks);
-        dls->proto->forEach(dls, ScraperStartAllDownloads, NULL);
-        ArrayList *htmls = dls->proto->filter(dls, ScraperDownloadIsMimeHtml, NULL);
-        links = htmls->proto->flatMap(htmls, ScraperDownloadGetLinks, NULL);
-        htmls->proto->destroy(htmls, NULL);
-        dls->proto->destroy(dls, ScraperEndAllDownloads);
     }
 
-    links->proto->destroy(links, ScraperDestroyLinks);
+    dl->destroy(dl);
 }
 
 string ScraperGetDomainName(string uri)
@@ -107,12 +113,17 @@ string ScraperGetResourceName(string uri)
     {
         res = wrapper->proto->slice(
             wrapper,
-            wrapper->proto->lastIndexOf(wrapper, '/'),
+            wrapper->proto->lastIndexOf(wrapper, '/') + 1,
             wrapper->proto->length(wrapper));
     }
     else
     {
         res = wrapper->proto->clone(wrapper);
+    }
+
+    if (res->proto->length(res) == 0)
+    {
+        res->proto->build(res, "%s", SCRAPER_INDEX_NAME);
     }
 
     wrapper->proto->destroy(wrapper);
@@ -133,8 +144,15 @@ void ScraperStartAllDownloads(void *e, size_t i, void *data)
 bool ScraperDownloadIsMimeHtml(void *e, size_t i, void *data)
 {
     Download *dl = e;
+
+    if (!dl->status || !dl->body || stringLength(dl->body) == 0)
+    {
+        return false;
+    }
+
     string mime = dl->getMimeType(dl);
-    bool res = stringsAreEqual(mime, HTML_CONTENT_TYPE) || stringLength(mime) == 0;
+    bool res =
+        stringsAreEqual(mime, HTML_CONTENT_TYPE) || stringLength(mime) == 0;
     free(mime);
     return res;
 }
