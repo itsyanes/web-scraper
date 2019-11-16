@@ -12,6 +12,7 @@ static void ScraperStartAllDownloads(void *e, size_t i, void *data);
 static bool ScraperDownloadIsMimeHtml(void *e, size_t i, void *data);
 static void *ScraperDownloadGetLinks(void *e, size_t i, void *data);
 static void ScraperEndAllDownloads(void *download);
+static void *ScraperTransformRelativeUri(void *e, size_t i, void *data);
 
 Scraper *newScraper()
 {
@@ -63,7 +64,7 @@ void ScraperScrap(Scraper *scraper)
             links->proto->destroy(links, ScraperDestroyLinks);
             dls->proto->forEach(dls, ScraperStartAllDownloads, NULL);
             ArrayList *htmls = dls->proto->filter(dls, ScraperDownloadIsMimeHtml, NULL);
-            links = htmls->proto->flatMap(htmls, ScraperDownloadGetLinks, NULL);
+            links = htmls->proto->flatMap(htmls, ScraperDownloadGetLinks, scraper->uri);
             htmls->proto->destroy(htmls, NULL);
             dls->proto->destroy(dls, ScraperEndAllDownloads);
         }
@@ -159,7 +160,26 @@ bool ScraperDownloadIsMimeHtml(void *e, size_t i, void *data)
 
 void *ScraperDownloadGetLinks(void *e, size_t i, void *data)
 {
-    return HTMLGetLinks(((Download *)e)->body);
+    ArrayList *links = HTMLGetLinks(((Download *)e)->body);
+    ArrayList *absoluteLinks = links->proto->map(links, ScraperTransformRelativeUri, data);
+    links->proto->destroy(links, ScraperDestroyLinks);
+    return absoluteLinks;
+}
+
+void *ScraperTransformRelativeUri(void *e, size_t i, void *data)
+{
+    string link = e;
+    string uri = data;
+    String *wrapper = wrapString(link);
+
+    if (!wrapper->proto->startsWith(wrapper, SCRAPER_HTTP))
+    {
+        string domainName = ScraperGetDomainName(uri);
+        wrapper->proto->build(wrapper, "http://%s/%s", domainName, link);
+        free(domainName);
+    }
+
+    return wrapper->proto->toString(wrapper);
 }
 
 void ScraperEndAllDownloads(void *download)
