@@ -4,6 +4,7 @@
 #include "task/task.c"
 #include "download/download.c"
 #include "html/html.c"
+#include "config/config.c"
 
 void init()
 {
