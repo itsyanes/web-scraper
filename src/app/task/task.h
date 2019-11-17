@@ -9,7 +9,7 @@
 
 #define PROCESS_CREATION_FAILED -1
 #define HANDLER_ATTACHMENT_FAILED -1
-#define DEFAULT_MAX_ITER 5
+#define DEFAULT_MAX_ITER 1
 
 typedef struct Task Task;
 struct Task

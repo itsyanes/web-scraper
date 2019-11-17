@@ -13,12 +13,15 @@ static bool ScraperDownloadIsMimeHtml(void *e, size_t i, void *data);
 static void *ScraperDownloadGetLinks(void *e, size_t i, void *data);
 static void ScraperEndAllDownloads(void *download);
 static void *ScraperTransformRelativeUri(void *e, size_t i, void *data);
+static void ScraperDestroyDownloadedMap(string key, void *value);
+static bool ScraperCheckAlreadyDownloaded(void *e, size_t i, void *data);
 
 Scraper *newScraper()
 {
     Scraper *scraper = xmalloc(1, sizeof(Scraper));
     scraper->uri = stringFromFormat("%s", SCRAPER_DEFAULT_URI);
     scraper->maxDepth = 0;
+    scraper->downloaded = newMap();
     scraper->outputDir = stringFromFormat("%s", SCRAPER_DEFAULT_OUTPUT_DIR);
     scraper->basePath = ScraperGetBasePath(scraper->outputDir, scraper->uri);
     scraper->options = &ScraperChangeOptions;
@@ -50,29 +53,24 @@ void ScraperScrap(Scraper *scraper)
 {
     createDirectory(scraper->basePath);
 
-    ArrayList *links;
-    Download *dl = newDownload(SCRAPER_INDEX_NAME, scraper->uri, scraper->basePath);
-    dl->start(dl);
+    ArrayList *links = newArrayList();
+    String *index = wrapString(scraper->uri);
+    links->proto->push(links, index->proto->toString(index));
 
-    if (dl->status)
+    for (u_int8_t i = 0; i <= scraper->maxDepth; i++)
     {
-        links = ScraperDownloadGetLinks(dl, 0, scraper->uri);
-
-        for (u_int8_t i = 0; i < scraper->maxDepth; i++)
-        {
-            ArrayList *dls = links->proto->map(links, ScraperDownloadFromLink, scraper);
-            links->proto->destroy(links, ScraperDestroyLinks);
-            dls->proto->forEach(dls, ScraperStartAllDownloads, NULL);
-            ArrayList *htmls = dls->proto->filter(dls, ScraperDownloadIsMimeHtml, NULL);
-            links = htmls->proto->flatMap(htmls, ScraperDownloadGetLinks, scraper->uri);
-            htmls->proto->destroy(htmls, NULL);
-            dls->proto->destroy(dls, ScraperEndAllDownloads);
-        }
-
+        ArrayList *dls = links->proto->map(links, ScraperDownloadFromLink, scraper);
         links->proto->destroy(links, ScraperDestroyLinks);
+        dls->proto->forEach(dls, ScraperStartAllDownloads, NULL);
+        ArrayList *htmls = dls->proto->filter(dls, ScraperDownloadIsMimeHtml, NULL);
+        ArrayList *foundLinks = htmls->proto->flatMap(htmls, ScraperDownloadGetLinks, scraper->uri);
+        links = foundLinks->proto->filter(foundLinks, ScraperCheckAlreadyDownloaded, scraper->downloaded);
+        foundLinks->proto->destroy(foundLinks, NULL);
+        htmls->proto->destroy(htmls, NULL);
+        dls->proto->destroy(dls, ScraperEndAllDownloads);
     }
 
-    dl->destroy(dl);
+    links->proto->destroy(links, ScraperDestroyLinks);
 }
 
 string ScraperGetDomainName(string uri)
@@ -187,8 +185,25 @@ void ScraperEndAllDownloads(void *download)
     ((Download *)download)->destroy((Download *)download);
 }
 
+void ScraperDestroyDownloadedMap(string key, void *value)
+{
+    free(key);
+}
+
+bool ScraperCheckAlreadyDownloaded(void *e, size_t i, void *data)
+{
+    string link = e;
+    Map *alreadyDl = data;
+    String *wrapper = wrapString(link);
+
+    return alreadyDl->proto->has(alreadyDl, link)
+               ? (wrapper->proto->destroy(wrapper), free(link), false)
+               : (alreadyDl->proto->set(alreadyDl, wrapper->proto->toString(wrapper), NULL), true);
+}
+
 void ScraperDestroy(Scraper *scraper)
 {
+    scraper->downloaded->proto->destroy(scraper->downloaded, ScraperDestroyDownloadedMap);
     free(scraper->uri);
     free(scraper->outputDir);
     free(scraper->basePath);
