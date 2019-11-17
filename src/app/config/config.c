@@ -1,7 +1,7 @@
 
 #include "config.h"
 
-ConfigTask* readConfigFile(FILE* f) {
+ConfigTask* readConfigFile(FILE* f, int* TaskLength) {
     //int valid = verifySyntax(f);
     //if(valid==0) printf("Unvalid FILE");
 
@@ -42,6 +42,8 @@ ConfigTask* readConfigFile(FILE* f) {
         c = fgetc(f);
         c = fgetc(f);
     }
+    j--;
+    *TaskLength = j;
     return appTasks;
 }
 
