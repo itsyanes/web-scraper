@@ -55,5 +55,7 @@ ConfigAction* readSubActions(FILE* f,ConfigAction* acts, int nbActs);
 int verifyElementSyntax(FILE* f);
 int verifyActionSyntax(FILE* f);
 int verifyTaskSyntax(FILE* f);
+int verifySubActionsSyntax(FILE* f);
+void checkComment(FILE* f);
 
 #endif
