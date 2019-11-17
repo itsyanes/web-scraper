@@ -56,7 +56,7 @@ void ScraperScrap(Scraper *scraper)
 
     if (dl->status)
     {
-        links = HTMLGetLinks(dl->body);
+        links = ScraperDownloadGetLinks(dl, 0, scraper->uri);
 
         for (u_int8_t i = 0; i < scraper->maxDepth; i++)
         {
